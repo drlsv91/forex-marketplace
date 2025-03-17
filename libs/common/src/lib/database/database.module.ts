@@ -9,13 +9,16 @@ import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-clas
     TypeOrmModule.forRootAsync({
       useFactory: (configService: ConfigService) => {
         return {
-          url: configService.getOrThrow('DATABSE_URL'),
-          autoLoadEntities: false,
-          logging: !!configService.get('DATABASE_LOGGING'),
-          synchronize: configService.get('DATABASE_SYNCHRONIZE_MAIN', true),
+          url: configService.getOrThrow('DATABASE_URL'),
+          autoLoadEntities: true,
+          logging: configService.get<boolean>('DATABASE_LOGGING', true),
+          synchronize: configService.get<boolean>(
+            'DATABASE_SYNCHRONIZE_MAIN',
+            true
+          ),
           type: configService.get('DATABASE_TYPE', 'postgres'),
           namingStrategy: new SnakeNamingStrategy(),
-          entities: ['dist/**/*.entity.js'],
+          entities: [__dirname + '/../**/*.entity{.ts,.js}'],
           migrations: ['dist/migrations/*{.ts,.js}'],
         };
       },

@@ -14,8 +14,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       useFactory: (config: ConfigService) => ({
         throttlers: [
           {
-            ttl: config.getOrThrow('THROTTLE_TTL'),
-            limit: config.getOrThrow('THROTTLE_LIMIT'),
+            ttl: config.get('THROTTLE_TTL', 300),
+            limit: config.get('THROTTLE_LIMIT', 20),
           },
         ],
       }),

@@ -31,13 +31,14 @@ export async function initApp(
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup(docs.endpoint ?? 'docs', app, document);
+  const docsUrl = docs.endpoint ?? 'docs';
+  SwaggerModule.setup(docsUrl, app, document);
 
   const port = app.get(ConfigService).getOrThrow('PORT');
   await app.listen(port);
-  app
-    .get(Logger)
-    .log(
-      `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
-    );
+  app.get(Logger).log(
+    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}:
+      📖 docs: is running on: http://localhost:${port}/${docsUrl}
+      `
+  );
 }
