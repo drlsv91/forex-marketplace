@@ -36,9 +36,14 @@ The Wallet Service manages user wallets, balances, and transactions.
 Create a .env file in the root of the wallet-service directory:
 
 ```bash
-   DATABASE_URL=postgres://user:password@localhost:5432/wallet_db
-   JWT_SECRET=your_jwt_secret
-   PORT=3000
+  DATABASE_URL=postgres://postgres:<password>@<host>:5432/<database_name>?schema=public
+  JWT_SECRET=<jwt_secret>
+  JWT_EXPIRATION_MS=3600
+  PORT=3000
+  RABBITMQ_URI=amqp://rabbitmq:5672
+  REDIS_HOST=localhost
+  REDIS_PORT=6379
+
 ```
 
 ## Running the Service
