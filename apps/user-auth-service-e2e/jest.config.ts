@@ -1,5 +1,5 @@
 export default {
-  displayName: 'forex-marketplace-e2e',
+  displayName: 'user-auth-service-e2e',
   preset: '../../jest.preset.js',
   globalSetup: '<rootDir>/src/support/global-setup.ts',
   globalTeardown: '<rootDir>/src/support/global-teardown.ts',
@@ -14,5 +14,5 @@ export default {
     ],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/forex-marketplace-e2e',
+  coverageDirectory: '../../coverage/user-auth-service-e2e',
 };
