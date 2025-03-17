@@ -10,14 +10,15 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   rabbitmq:
-    image: rabbitmq:3-management
-    container_name: forex_rabbitmq
+    image: rabbitmq
     ports:
-      - '5672:5672'
-      - '15672:15672'
+      - 5672:5672
+  redis:
+    image: redis:7-alpine
+    ports:
+      - '6379:6379'
     environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
+      - ALLOW_EMPTY_PASSWORD=yes
 
 volumes:
   postgres_data:
