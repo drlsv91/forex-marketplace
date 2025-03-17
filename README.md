@@ -1,7 +1,5 @@
 # Forex Marketplace
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
-
 ✨ Welcome to the **Forex Marketplace** monorepo! ✨
 
 This project is a microservices-based Forex marketplace built using **NestJS**, **TypeORM**, **Postgres**, and **Nx**. It allows users to buy and sell forex, with conversion rates fetched from an external API.
