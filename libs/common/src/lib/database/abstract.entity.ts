@@ -7,7 +7,7 @@ import { AbstractDto } from './abstract.dto';
 
 export abstract class AbstractEntity<T extends AbstractDto = AbstractDto> {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  readonly id: string;
   @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP(6)' })
   createdAt: Date;
 
