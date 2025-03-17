@@ -11,9 +11,6 @@ export abstract class AbstractEntity<T extends AbstractDto = AbstractDto> {
   @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP(6)' })
   createdAt: Date;
 
-  @UpdateDateColumn({ default: () => 'CURRENT_TIMESTAMP(6)' })
-  updatedAt: Date;
-
   abstract dtoClass: new (entity: AbstractEntity, options?: any) => T;
   toDto(): T {
     return new this.dtoClass(this);

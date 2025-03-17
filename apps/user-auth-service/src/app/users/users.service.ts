@@ -1,26 +1,62 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UserEntity } from './entities/user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>
+  ) {}
+  async create(createUserDto: CreateUserDto) {
+    await this.validateCreateUser(createUserDto);
+
+    return this.userRepository.save(
+      this.userRepository.create({
+        ...createUserDto,
+        password: await bcrypt.hash(createUserDto.password, 10),
+      })
+    );
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async getUser(
+    filterQuery: FindOptionsWhere<UserEntity> | FindOptionsWhere<UserEntity>[]
+  ) {
+    const user = await this.userRepository.findOne({ where: filterQuery });
+    if (!user) {
+      throw new NotFoundException('user not found');
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async verifyUser(email: string, password: string) {
+    const errorMessage = 'Invalid credentials';
+    const user = await this.userRepository.findOne({ where: { email } });
+
+    if (!user) {
+      throw new UnauthorizedException(errorMessage);
+    }
+    const passwordIsValid = await bcrypt.compare(password, user.password);
+    if (!passwordIsValid) {
+      throw new UnauthorizedException(errorMessage);
+    }
+
+    return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  private async validateCreateUser(createUserDto: CreateUserDto) {
+    const user = await this.userRepository.findOne({
+      where: { email: createUserDto.email },
+    });
+    if (user) {
+      throw new UnprocessableEntityException('User email already exist');
+    }
   }
 }
