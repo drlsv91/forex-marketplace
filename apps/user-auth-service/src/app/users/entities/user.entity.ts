@@ -12,6 +12,9 @@ export class UserEntity extends AbstractEntity<UserResponse> {
   @Column({ length: 200 })
   fullName: string;
 
+  @Column({ type: 'timestamp', nullable: true })
+  lastLoginTimestamp: Date;
+
   @UpdateDateColumn({ default: () => 'CURRENT_TIMESTAMP(6)' })
   updatedAt: Date;
 

@@ -35,6 +35,16 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException('user not found');
     }
+    return user;
+  }
+  async findOneAndUpdate(
+    filterQuery: FindOptionsWhere<UserEntity> | FindOptionsWhere<UserEntity>[],
+    data: Partial<UserEntity>
+  ) {
+    const user = await this.getUser(filterQuery);
+    const findParams = { id: user.id };
+    await this.userRepository.update(findParams, data);
+    return this.userRepository.findOne({ where: findParams });
   }
 
   async verifyUser(email: string, password: string) {
