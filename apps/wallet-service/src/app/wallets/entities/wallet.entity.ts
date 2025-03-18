@@ -1,9 +1,10 @@
 import { AbstractEntity } from '@forex-marketplace/common';
-import { Column, Entity, Unique, UpdateDateColumn } from 'typeorm';
+import { Check, Column, Entity, Unique, UpdateDateColumn } from 'typeorm';
 import { WalletResponse } from '../dto/wallet-response.dto';
 
 @Entity('wallets')
 @Unique(['userId', 'currency'])
+@Check(`balance >= 0`)
 export class WalletEntity extends AbstractEntity<WalletResponse> {
   @Column({ type: 'uuid' })
   userId: string;
