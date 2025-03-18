@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
-import { AppService } from './app.service';
+import { ConfigModule } from '@nestjs/config';
+import * as Joi from 'joi';
 import { UsersModule } from './users/users.module';
 import {
   DatabaseModule,
@@ -7,8 +8,6 @@ import {
   LoggerModule,
 } from '@forex-marketplace/common';
 import { AuthModule } from './auth/auth.module';
-import { ConfigModule } from '@nestjs/config';
-import * as Joi from 'joi';
 @Module({
   imports: [
     LoggerModule,
@@ -27,6 +26,6 @@ import * as Joi from 'joi';
   ],
 
   controllers: [],
-  providers: [AppService],
+  providers: [],
 })
 export class AppModule {}
