@@ -37,7 +37,10 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": ["apps/user-auth-service-e2e/**/*"]
+      "exclude": [
+        "apps/user-auth-service-e2e/**/*",
+        "apps/wallet-service-e2e/**/*"
+      ]
     }
   ],
   "defaultBase": "origin/main"
