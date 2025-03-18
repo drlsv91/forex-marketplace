@@ -20,6 +20,7 @@ import {
   User,
 } from 'types/proto/auth';
 import { Observable } from 'rxjs';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -37,9 +38,10 @@ export class AuthController implements AuthServiceController {
     const result = await this.authService.login(user, response);
     response.status(HttpStatus.OK).send(result);
   }
-
-  async authenticate(request: AuthenticateRequest): Promise<any> {
-    console.log(request);
-    return {} as any;
+  @UseGuards(JwtAuthGuard)
+  authenticate(
+    request: AuthenticateRequest & { user: UserEntity }
+  ): Promise<User> | Observable<User> | User {
+    return request.user;
   }
 }
