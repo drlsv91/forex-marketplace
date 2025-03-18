@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@forex-marketplace/common": ["libs/common/src/index.ts"]
+      "@forex-marketplace/common": ["libs/common/src/index.ts"],
+      "@forex-marketplace/testing": ["libs/testing/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
