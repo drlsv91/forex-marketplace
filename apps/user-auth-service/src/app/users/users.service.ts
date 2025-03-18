@@ -9,7 +9,6 @@ import { UserEntity } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
-import { UserResponse } from './dto/user-response.dto';
 
 @Injectable()
 export class UsersService {
@@ -26,7 +25,7 @@ export class UsersService {
         password: await bcrypt.hash(createUserDto.password, 10),
       })
     );
-    return new UserResponse(user);
+    return user.toDto();
   }
 
   async getUser(
