@@ -12,8 +12,10 @@ import { UserEntity } from '../users/entities/user.entity';
 import { currentUser } from '@forex-marketplace/common';
 import { Response } from 'express';
 import { LoginDto } from './dto/login.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('auth')
+@ApiTags('Auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
