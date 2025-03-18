@@ -27,6 +27,6 @@ export class WalletsController implements WalletServiceController {
   @Get()
   @UseGuards(JwtAuardGuard)
   async create(@currentUser() user: User) {
-    return this.walletsService.getWallet(user);
+    return this.walletsService.getUserWallet(user);
   }
 }

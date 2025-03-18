@@ -3,8 +3,8 @@ import { Check, Column, Entity, UpdateDateColumn } from 'typeorm';
 import { WalletTransactionResponse } from '../dto/wallet-response.dto';
 
 export enum TransactionType {
-  DEPOSIT = 'DEPOSIT',
-  WITHDRAWAL = 'WITHDRAWAL',
+  CREDIT = 'CREDIT',
+  DEBIT = 'DEBIT',
   TRADE = 'TRADE',
   TRANSFER = 'TRANSFER',
 }
@@ -32,6 +32,9 @@ export class WalletTransactionEntity extends AbstractEntity<WalletTransactionRes
   amount: number;
   @Column({ type: 'varchar', length: 50, unique: true })
   reference: string;
+  @Column({ type: 'varchar', length: 500 })
+  description: string;
+
   @Column({ type: 'varchar', length: 10 })
   currency: string;
 

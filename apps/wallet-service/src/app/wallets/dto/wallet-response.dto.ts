@@ -42,7 +42,7 @@ export class WalletTransactionResponse extends AbstractDto {
 
   @ApiProperty({
     description: 'Transaction type',
-    example: TransactionType.DEPOSIT,
+    example: TransactionType.CREDIT,
   })
   transactionType: TransactionType;
   @ApiProperty({
