@@ -1,6 +1,9 @@
 import {
+  Inject,
   Injectable,
+  Logger,
   NotFoundException,
+  OnModuleInit,
   UnauthorizedException,
   UnprocessableEntityException,
 } from '@nestjs/common';
@@ -9,13 +12,25 @@ import * as bcrypt from 'bcryptjs';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserEntity } from './entities/user.entity';
+import { ClientGrpc } from '@nestjs/microservices';
+import { WALLET_SERVICE_NAME, WalletServiceClient } from 'types/proto/wallet';
 
 @Injectable()
-export class UsersService {
+export class UsersService implements OnModuleInit {
+  private walletService: WalletServiceClient;
+  private readonly logger = new Logger(UsersService.name);
   constructor(
     @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>
+    private readonly userRepository: Repository<UserEntity>,
+    @Inject(WALLET_SERVICE_NAME)
+    private readonly clientWallet: ClientGrpc
   ) {}
+
+  async onModuleInit() {
+    this.walletService =
+      this.clientWallet.getService<WalletServiceClient>(WALLET_SERVICE_NAME);
+  }
+
   async create(createUserDto: CreateUserDto) {
     await this.validateCreateUser(createUserDto);
 
@@ -25,6 +40,13 @@ export class UsersService {
         password: await bcrypt.hash(createUserDto.password, 10),
       })
     );
+    //  currency can be dynamically injected based on the registered user country
+    this.walletService
+      .createWallet({ userId: user.id, currency: 'USD' })
+      .subscribe((res) => {
+        this.logger.log(`USER WALLET CREATED SUCC =>`, res);
+      });
+
     return user.toDto();
   }
 

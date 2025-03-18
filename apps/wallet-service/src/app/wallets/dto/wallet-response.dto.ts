@@ -19,15 +19,12 @@ export class WalletResponse extends AbstractDto {
 
   @ApiProperty({ description: 'Wallet currency', example: 'USD' })
   currency: string;
-  @ApiProperty({ description: 'Wallet currency symbole', example: '$' })
-  currencySymbol: string;
 
   constructor(wallet: WalletEntity) {
     super(wallet);
     this.userId = wallet.userId;
     this.balance = wallet.balance;
     this.currency = wallet.currency;
-    this.currencySymbol = wallet.currencySymbol;
   }
 }
 

@@ -14,10 +14,4 @@ export class CreateWalletDto {
   @MaxLength(10)
   @ApiProperty({ description: 'currency', example: 'USD' })
   currency: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @MaxLength(10)
-  @ApiProperty({ description: 'currency symbol', example: '$' })
-  currencySymbol: string;
 }

@@ -7,12 +7,10 @@ import { WalletResponse } from '../dto/wallet-response.dto';
 export class WalletEntity extends AbstractEntity<WalletResponse> {
   @Column({ type: 'uuid' })
   userId: string;
-  @Column({ type: 'decimal', scale: 8, precision: 18 })
+  @Column({ type: 'decimal', scale: 8, precision: 18, default: 0.0 })
   balance: number;
   @Column({ type: 'varchar', length: 10 })
   currency: string;
-  @Column({ type: 'varchar', length: 5 })
-  currencySymbol: string;
 
   @UpdateDateColumn({
     type: 'timestamp',
