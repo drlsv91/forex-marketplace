@@ -13,10 +13,18 @@ import { currentUser } from '@forex-marketplace/common';
 import { Response } from 'express';
 import { LoginDto } from './dto/login.dto';
 import { ApiTags } from '@nestjs/swagger';
+import {
+  AuthenticateRequest,
+  AuthServiceController,
+  AuthServiceControllerMethods,
+  User,
+} from 'types/proto/auth';
+import { Observable } from 'rxjs';
 
 @Controller('auth')
 @ApiTags('Auth')
-export class AuthController {
+@AuthServiceControllerMethods()
+export class AuthController implements AuthServiceController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
@@ -28,5 +36,10 @@ export class AuthController {
   ) {
     const result = await this.authService.login(user, response);
     response.status(HttpStatus.OK).send(result);
+  }
+
+  async authenticate(request: AuthenticateRequest): Promise<any> {
+    console.log(request);
+    return {} as any;
   }
 }

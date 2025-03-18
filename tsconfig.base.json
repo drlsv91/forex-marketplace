@@ -16,6 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@forex-marketplace/common": ["libs/common/src/index.ts"],
+      "@forex-marketplace/shared-proto": ["shared-proto/src/index.ts"],
       "@forex-marketplace/testing": ["libs/testing/src/index.ts"]
     }
   },

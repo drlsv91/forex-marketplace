@@ -28,6 +28,7 @@ export async function initApp(
     .setVersion('1.0')
     .addTag(docs.tagName)
     .addBearerAuth()
+    .addCookieAuth('Authentication')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
