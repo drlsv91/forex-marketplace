@@ -39,7 +39,8 @@
       },
       "exclude": [
         "apps/user-auth-service-e2e/**/*",
-        "apps/wallet-service-e2e/**/*"
+        "apps/wallet-service-e2e/**/*",
+        "apps/order-service-e2e/**/*"
       ]
     }
   ],
