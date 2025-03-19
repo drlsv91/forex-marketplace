@@ -27,7 +27,7 @@ export class WalletEntity extends AbstractEntity<WalletResponse> {
     default: () => 'CURRENT_TIMESTAMP',
     onUpdate: 'CURRENT_TIMESTAMP',
   })
-  updated_at: Date;
+  updatedAt: Date;
 
   dtoClass = WalletResponse;
 }

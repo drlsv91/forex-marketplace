@@ -57,7 +57,7 @@ export class WalletsService {
 
     try {
       let wallet = await this.getUserWallet(user, queryRunner.manager);
-      const previousBal = wallet.balance;
+      const balanceBefore = wallet.balance;
 
       wallet.balance += amount;
 
@@ -69,7 +69,7 @@ export class WalletsService {
           user,
           amount,
           TransactionType.CREDIT,
-          previousBal
+          balanceBefore
         )
       );
       await queryRunner.manager.save(WalletTransactionEntity, transaction);
@@ -96,7 +96,7 @@ export class WalletsService {
 
     try {
       let wallet = await this.getUserWallet(user, queryRunner.manager);
-      const previousBal = wallet.balance;
+      const balanceBefore = wallet.balance;
 
       if (wallet.balance < amount)
         throw new BadRequestException('Insufficient balance');
@@ -110,7 +110,7 @@ export class WalletsService {
           user,
           amount,
           TransactionType.DEBIT,
-          previousBal
+          balanceBefore
         )
       );
       await queryRunner.manager.save(transaction);

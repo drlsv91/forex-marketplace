@@ -15,20 +15,22 @@ export class CreateTransaction {
   currency: string;
   description: string;
   status: TransactionStatus;
-  previousBal: number;
+  balanceBefore: number;
+  balanceAfter: number;
   constructor(
     wallet: WalletEntity,
     user: User,
     amount: number,
     transactionType: TransactionType,
-    previousBal: number
+    balanceBefore: number
   ) {
     this.reference = this.generateReference(transactionType);
     this.amount = amount;
     this.walletId = wallet.id;
     this.transactionType = transactionType;
     this.status = TransactionStatus.COMPLETED;
-    this.previousBal = previousBal;
+    this.balanceBefore = balanceBefore;
+    this.balanceAfter = wallet.balance;
     this.currency = 'USD';
     this.userId = user.id;
     this.description = `${transactionType}:PAYSTACK:SENDER ACCNAME`;

@@ -5,6 +5,8 @@ import {
 } from '@forex-marketplace/common';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { OrdersModule } from './orders/orders.module';
+import { TransactionsModule } from './transactions/transactions.module';
 import * as Joi from 'joi';
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import * as Joi from 'joi';
       }),
     }),
     HealthModule,
+    OrdersModule,
+    TransactionsModule,
   ],
 })
 export class AppModule {}
