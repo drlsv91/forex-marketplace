@@ -5,18 +5,17 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { CreateWalletDto } from './dto/create-wallet.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { WalletEntity } from './entities/wallet.entity';
 import { DataSource, EntityManager, Repository } from 'typeorm';
 import { User } from 'types/proto/auth';
+import { CreateWalletDto } from './dto/create-wallet.dto';
+import { WalletEntity } from './entities/wallet.entity';
 import {
-  TransactionStatus,
   TransactionType,
   WalletTransactionEntity,
 } from './entities/transaction.entity';
 import { UpdateWalletBalanceDto } from './dto/update-wallet.dto';
-import { randomBytes } from 'crypto';
+import { CreateTransaction } from './dto/transaction.dto';
 
 @Injectable()
 export class WalletsService {
@@ -33,7 +32,6 @@ export class WalletsService {
     await this.validateCreateWallet(createWalletDto);
     const createPayload = this.walletRepository.create(createWalletDto);
     const wallet = await this.walletRepository.save(createPayload);
-
     return wallet;
   }
   async getUserWallet(
@@ -58,30 +56,26 @@ export class WalletsService {
     await queryRunner.startTransaction();
 
     try {
-      const wallet = await this.getUserWallet(user, queryRunner.manager);
+      let wallet = await this.getUserWallet(user, queryRunner.manager);
+      const previousBal = wallet.balance;
 
-      const facilitator = {
-        reference: this.generateReference(TransactionType.CREDIT),
-        amount,
-        description: `CREDIT:PAYSTACK:SENDERACC NAME`,
-      };
+      wallet.balance += amount;
 
-      wallet.balance += facilitator.amount;
-      await queryRunner.manager.save(wallet);
+      await queryRunner.manager.save(WalletEntity, wallet);
 
-      const transaction = this.transactionRepository.create({
-        walletId: wallet.id,
-        userId: user.id,
-        amount: facilitator.amount,
-        transactionType: TransactionType.CREDIT,
-        reference: facilitator.reference,
-        description: facilitator.description,
-        currency: 'USD',
-        status: TransactionStatus.COMPLETED,
-      });
-      await queryRunner.manager.save(transaction);
+      const transaction = this.transactionRepository.create(
+        new CreateTransaction(
+          wallet,
+          user,
+          amount,
+          TransactionType.CREDIT,
+          previousBal
+        )
+      );
+      await queryRunner.manager.save(WalletTransactionEntity, transaction);
 
       await queryRunner.commitTransaction();
+      wallet = await this.getUserWallet(user);
       return {
         message: 'Wallet credited successfully',
         balance: wallet.balance,
@@ -95,18 +89,14 @@ export class WalletsService {
     }
   }
 
-  async debit({ user, amount, type }: UpdateWalletBalanceDto) {
+  async debit({ user, amount }: UpdateWalletBalanceDto) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
-      this.validateTransactionType(
-        [TransactionType.DEBIT, TransactionType.TRADE],
-        type
-      );
-
-      const wallet = await this.getUserWallet(user, queryRunner.manager);
+      let wallet = await this.getUserWallet(user, queryRunner.manager);
+      const previousBal = wallet.balance;
 
       if (wallet.balance < amount)
         throw new BadRequestException('Insufficient balance');
@@ -114,16 +104,19 @@ export class WalletsService {
       wallet.balance -= amount;
       await queryRunner.manager.save(wallet);
 
-      const transaction = this.transactionRepository.create({
-        walletId: wallet.id,
-        amount,
-        transactionType: TransactionType.DEBIT,
-        reference: this.generateReference(TransactionType.DEBIT),
-        userId: user.id,
-      });
+      const transaction = this.transactionRepository.create(
+        new CreateTransaction(
+          wallet,
+          user,
+          amount,
+          TransactionType.DEBIT,
+          previousBal
+        )
+      );
       await queryRunner.manager.save(transaction);
 
       await queryRunner.commitTransaction();
+      wallet = await this.getUserWallet(user);
       return {
         message: 'Wallet debited successfully',
         balance: wallet.balance,
@@ -144,20 +137,5 @@ export class WalletsService {
       throw new UnprocessableEntityException('User wallet already exist');
     }
     return wallet;
-  }
-
-  private validateTransactionType(
-    validTypes: TransactionType[],
-    type: TransactionType
-  ) {
-    if (!validTypes.includes(type)) {
-      throw new BadRequestException('Invalid transaction type');
-    }
-  }
-
-  private generateReference(prefix = 'TXN'): string {
-    const timestamp = Date.now().toString().slice(-8);
-    const randomPart = randomBytes(3).toString('hex').toUpperCase();
-    return `${prefix}${timestamp}${randomPart}`;
   }
 }

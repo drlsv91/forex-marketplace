@@ -8,7 +8,16 @@ import { WalletResponse } from '../dto/wallet-response.dto';
 export class WalletEntity extends AbstractEntity<WalletResponse> {
   @Column({ type: 'uuid' })
   userId: string;
-  @Column({ type: 'decimal', scale: 8, precision: 18, default: 0.0 })
+  @Column({
+    type: 'decimal',
+    scale: 8,
+    precision: 18,
+    default: 0.0,
+    transformer: {
+      from: (value) => parseFloat(value),
+      to: (value) => value,
+    },
+  })
   balance: number;
   @Column({ type: 'varchar', length: 10 })
   currency: string;

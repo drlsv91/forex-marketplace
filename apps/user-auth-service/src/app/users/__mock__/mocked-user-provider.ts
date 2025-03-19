@@ -5,6 +5,16 @@ import {
   getMockedConnectionProvider,
   getRepositoryMethods,
 } from '@forex-marketplace/testing';
+import { WALLET_SERVICE_NAME } from 'types/proto/wallet';
+import { of } from 'rxjs';
+
+export const mockWalletService = {
+  createWallet: jest.fn().mockReturnValue(of({ success: true })),
+};
+
+const mockClientGrpc = {
+  getService: jest.fn().mockReturnValue(mockWalletService),
+};
 
 export const getMockedUserServiceProviders = (users: Partial<UserEntity>[]) => [
   UsersService,
@@ -14,6 +24,11 @@ export const getMockedUserServiceProviders = (users: Partial<UserEntity>[]) => [
     useValue: {
       ...getRepositoryMethods(UserEntity),
     },
+  },
+
+  {
+    provide: WALLET_SERVICE_NAME,
+    useValue: mockClientGrpc,
   },
 
   getMockedConnectionProvider(UserEntity, users),

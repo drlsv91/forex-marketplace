@@ -4,16 +4,17 @@ import {
   getMockedConnectionProvider,
   getRepositoryMethods,
 } from '@forex-marketplace/testing';
-import { UsersService } from '../../users/users.service';
 import { UserEntity } from '../../users/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { faker } from '@faker-js/faker';
 import { AuthService } from '../auth.service';
+import { getMockedUserServiceProviders } from '../../users/__mock__/mocked-user-provider';
+import { UsersService } from '../../users/users.service';
 
 export const getMockedAuthServiceProviders = (users: Partial<UserEntity>[]) => [
-  UsersService,
   AuthService,
+  ...getMockedUserServiceProviders(users),
   {
     provide: getRepositoryToken(UserEntity),
     useValue: {
@@ -31,12 +32,20 @@ export const getMockedAuthServiceProviders = (users: Partial<UserEntity>[]) => [
       },
     },
   },
+
   {
     provide: JwtService,
     useValue: {
       sign: jest.fn().mockReturnValue('mockToken'),
       signAsync: jest.fn(),
       verifyAsync: jest.fn(),
+    },
+  },
+  {
+    provide: UsersService,
+    useValue: {
+      findOneAndUpdate: jest.fn(),
+      create: jest.fn(() => ({ id: '1' })),
     },
   },
 

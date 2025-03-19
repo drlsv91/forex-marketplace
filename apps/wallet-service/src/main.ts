@@ -24,7 +24,7 @@ async function bootstrap() {
     docs: {
       title: 'Wallet Service',
       description: 'API for wallet service',
-      tagName: 'wallet',
+      tagName: 'Wallet',
     },
   });
 

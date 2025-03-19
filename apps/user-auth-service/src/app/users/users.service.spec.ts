@@ -1,6 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
-import { getMockedUserServiceProviders } from './__mock__/mocked-user-provider';
+import {
+  getMockedUserServiceProviders,
+  mockWalletService,
+} from './__mock__/mocked-user-provider';
 import { createUserDto } from './__mock__/user-dto';
 import { UnprocessableEntityException } from '@nestjs/common';
 import { compare } from 'bcryptjs';
@@ -15,6 +18,8 @@ describe('UsersService', () => {
     }).compile();
 
     service = module.get<UsersService>(UsersService);
+
+    await service.onModuleInit();
   });
 
   afterEach(() => {
@@ -29,6 +34,7 @@ describe('UsersService', () => {
   describe('create', () => {
     it('should create a new user', async () => {
       const user = await service.create(createUserDto);
+
       expect(user.id).toBeDefined();
       expect(user.email).toBe(createUserDto.email);
       expect(user.fullName).toBe(createUserDto.fullName);
@@ -37,6 +43,10 @@ describe('UsersService', () => {
       expect(await compare(createUserDto.password, fetchedUser.password)).toBe(
         true
       );
+      expect(mockWalletService.createWallet).toHaveBeenLastCalledWith({
+        userId: user.id,
+        currency: 'USD',
+      });
     });
     it("should throw UnprocessableEntityException('User email already exist')", async () => {
       await service.create(createUserDto);
