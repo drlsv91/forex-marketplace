@@ -1,11 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { AbstractDto } from '@forex-marketplace/common';
+import { AbstractDto, TransformCurrency } from '@forex-marketplace/common';
 import { WalletEntity } from '../entities/wallet.entity';
 import {
   TransactionStatus,
   TransactionType,
   WalletTransactionEntity,
 } from '../entities/transaction.entity';
+import { IsCurrency, IsNotEmpty } from 'class-validator';
 
 export class WalletResponse extends AbstractDto {
   @ApiProperty({
@@ -73,4 +74,14 @@ export class WalletTransactionResponse extends AbstractDto {
     this.transactionType = transaction.transactionType;
     this.reference = transaction.reference;
   }
+}
+
+export class GetUserWalletDto {
+  @IsNotEmpty()
+  @IsCurrency()
+  @TransformCurrency()
+  @ApiProperty({ description: 'currency', example: 'USD' })
+  currency: string;
+
+  userId: string;
 }

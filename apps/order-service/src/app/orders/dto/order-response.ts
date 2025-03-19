@@ -1,11 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { AbstractDto } from '@forex-marketplace/common';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { AbstractDto, TRADE_TYPE } from '@forex-marketplace/common';
 
 import {
   ORDER_STATUS,
   ORDER_TYPE,
   OrderEntity,
-  TRADE_TYPE,
 } from '../entities/order.entity';
 
 export class OrderResponse extends AbstractDto {
@@ -23,17 +22,17 @@ export class OrderResponse extends AbstractDto {
 
   @ApiProperty({
     description: 'Order type',
-    example: ORDER_TYPE.market,
+    example: 'MARKET',
   })
   orderType: ORDER_TYPE;
   @ApiProperty({
     description: 'trade type',
-    example: TRADE_TYPE.buy,
+    example: 'BUY',
   })
   tradeType: TRADE_TYPE;
   @ApiProperty({
     description: 'order status type',
-    example: ORDER_STATUS.pending,
+    example: 'PENDING',
   })
   status: ORDER_STATUS;
   @ApiProperty({
@@ -42,15 +41,25 @@ export class OrderResponse extends AbstractDto {
   })
   amount: number;
   @ApiProperty({
-    description: 'order price per unit',
+    description: 'excuted order price per unit',
     example: 100,
   })
   executedAmount: number;
+  @ApiProperty({
+    description: 'executed order price per unit',
+    example: 100,
+  })
+  executionPrice: number;
   @ApiProperty({
     description: 'order price per unit',
     example: 100,
   })
   pricePerUnit: number;
+  @ApiPropertyOptional({
+    description: 'Defines an expiration date for LIMIT or STOP orders.',
+    example: new Date().toISOString(),
+  })
+  expiresAt?: Date;
 
   constructor(order: OrderEntity) {
     super(order);
@@ -62,5 +71,7 @@ export class OrderResponse extends AbstractDto {
     this.amount = order.amount;
     this.executedAmount = order.executedAmount;
     this.pricePerUnit = order.pricePerUnit;
+    this.executionPrice = order.executionPrice;
+    this.expiresAt = order.expiresAt;
   }
 }

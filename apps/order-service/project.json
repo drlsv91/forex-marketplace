@@ -6,6 +6,7 @@
   "tags": [],
   "targets": {
     "build": {
+      "dependsOn": ["generate-ts-proto"],
       "executor": "nx:run-commands",
       "options": {
         "command": "webpack-cli build",
@@ -38,6 +39,9 @@
       "options": {
         "passWithNoTests": true
       }
+    },
+    "generate-ts-proto": {
+      "command": "nx generate-ts-proto"
     }
   }
 }

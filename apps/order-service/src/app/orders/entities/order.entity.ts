@@ -1,29 +1,26 @@
-import { AbstractEntity } from '@forex-marketplace/common';
-import { Check, Column, Entity, UpdateDateColumn } from 'typeorm';
+import { AbstractEntity, TRADE_TYPE } from '@forex-marketplace/common';
+import { Check, Column, Entity, OneToMany, UpdateDateColumn } from 'typeorm';
 import { OrderResponse } from '../dto/order-response';
-export enum ORDER_TYPE {
-  market = 'MARKET',
-  stop_loss = 'STOP_LOSS',
-  limit = 'LIMIT',
-  take_profit = 'TAKE_PROFIT',
-}
+import { OrderTransactionEntity } from '../../transactions/entities/transaction.entity';
 
-export enum TRADE_TYPE {
-  buy = 'BUY',
-  sell = 'SELL',
+export enum ORDER_TYPE {
+  MARKET = 'MARKET',
+  STOP_LOSS = 'STOP_LOSS',
+  LIMIT = 'LIMIT',
+  TAKE_PROFIT = 'TAKE_PROFIT',
 }
 
 export enum ORDER_STATUS {
-  pending = 'PENDING',
-  failed = 'FAILED',
-  parially_filled = 'PARIALLY_FILLED',
-  cancelled = 'CANCELLED',
-  expired = 'EXPIRED',
+  PENDING = 'PENDING',
+  FILLED = 'FILLED',
+  PARIALLY_FILLED = 'PARIALLY_FILLED',
+  CANCELLED = 'CANCELLED',
+  EXPIRED = 'EXPIRED',
 }
 @Entity('orders')
 @Check(`amount >= 0`)
-@Check(`executedAmount >= 0`)
-@Check(`pricePerUnit >= 0`)
+@Check(`executed_amount >= 0`)
+@Check(`price_per_unit >= 0`)
 export class OrderEntity extends AbstractEntity<OrderResponse> {
   @Column({ type: 'uuid' })
   userId: string;
@@ -33,7 +30,7 @@ export class OrderEntity extends AbstractEntity<OrderResponse> {
   orderType: ORDER_TYPE;
   @Column({ type: 'enum', enum: TRADE_TYPE })
   tradeType: TRADE_TYPE;
-  @Column({ type: 'enum', enum: ORDER_STATUS, default: ORDER_STATUS.pending })
+  @Column({ type: 'enum', enum: ORDER_STATUS, default: ORDER_STATUS.PENDING })
   status: ORDER_STATUS;
   @Column({
     type: 'decimal',
@@ -67,7 +64,25 @@ export class OrderEntity extends AbstractEntity<OrderResponse> {
       to: (value) => value,
     },
   })
+  executionPrice: number;
+  @Column({
+    type: 'decimal',
+    scale: 8,
+    precision: 18,
+    default: 0.0,
+    transformer: {
+      from: (value) => parseFloat(value),
+      to: (value) => value,
+    },
+  })
   pricePerUnit: number;
+
+  @Column({ type: 'timestamp', nullable: true })
+  expiresAt?: Date;
+
+  @OneToMany(() => OrderTransactionEntity, (transaction) => transaction.order)
+  transactions: OrderTransactionEntity[];
+
   @UpdateDateColumn({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP',

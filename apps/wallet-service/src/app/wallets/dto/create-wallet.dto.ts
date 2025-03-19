@@ -1,3 +1,4 @@
+import { IsCurrency, TransformCurrency } from '@forex-marketplace/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, IsUUID, MaxLength } from 'class-validator';
 
@@ -9,9 +10,9 @@ export class CreateWalletDto {
   @IsUUID()
   userId: string;
 
-  @IsString()
   @IsNotEmpty()
-  @MaxLength(10)
+  @IsCurrency()
+  @TransformCurrency()
   @ApiProperty({ description: 'currency', example: 'USD' })
   currency: string;
 }

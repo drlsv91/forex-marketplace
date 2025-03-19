@@ -5,12 +5,25 @@ package wallet;
 
 service WalletService {
   rpc CreateWallet(CreateWalletRequest) returns (CreateWalletResponse);
+  rpc GetTradeWallet(FilterWalletRequest) returns (CreateWalletResponse);
+  rpc Trade(UpdateWalletRequest) returns (CreateWalletResponse);
 }
 
 
+
+message FilterWalletRequest {
+  string userId = 1;
+  string currency = 2;
+}
 message CreateWalletRequest {
   string userId = 1;
   string currency = 2;
+}
+message UpdateWalletRequest {
+  string userId = 1;
+  string currency = 2;
+  double amount = 3;
+  string type = 4;
 }
 
 message CreateWalletResponse {
@@ -18,4 +31,5 @@ message CreateWalletResponse {
   string userId = 2;
   string currency = 3;
   double balance = 4;
+  double reservedFunds = 5;
 }

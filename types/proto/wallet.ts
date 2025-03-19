@@ -10,9 +10,21 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "wallet";
 
+export interface FilterWalletRequest {
+  userId: string;
+  currency: string;
+}
+
 export interface CreateWalletRequest {
   userId: string;
   currency: string;
+}
+
+export interface UpdateWalletRequest {
+  userId: string;
+  currency: string;
+  amount: number;
+  type: string;
 }
 
 export interface CreateWalletResponse {
@@ -20,23 +32,36 @@ export interface CreateWalletResponse {
   userId: string;
   currency: string;
   balance: number;
+  reservedFunds: number;
 }
 
 export const WALLET_PACKAGE_NAME = "wallet";
 
 export interface WalletServiceClient {
   createWallet(request: CreateWalletRequest): Observable<CreateWalletResponse>;
+
+  getTradeWallet(request: FilterWalletRequest): Observable<CreateWalletResponse>;
+
+  trade(request: UpdateWalletRequest): Observable<CreateWalletResponse>;
 }
 
 export interface WalletServiceController {
   createWallet(
     request: CreateWalletRequest,
   ): Promise<CreateWalletResponse> | Observable<CreateWalletResponse> | CreateWalletResponse;
+
+  getTradeWallet(
+    request: FilterWalletRequest,
+  ): Promise<CreateWalletResponse> | Observable<CreateWalletResponse> | CreateWalletResponse;
+
+  trade(
+    request: UpdateWalletRequest,
+  ): Promise<CreateWalletResponse> | Observable<CreateWalletResponse> | CreateWalletResponse;
 }
 
 export function WalletServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["createWallet"];
+    const grpcMethods: string[] = ["createWallet", "getTradeWallet", "trade"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("WalletService", method)(constructor.prototype[method], method, descriptor);

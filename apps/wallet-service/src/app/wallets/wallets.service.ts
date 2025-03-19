@@ -7,7 +7,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, EntityManager, Repository } from 'typeorm';
-import { User } from 'types/proto/auth';
 import { CreateWalletDto } from './dto/create-wallet.dto';
 import { WalletEntity } from './entities/wallet.entity';
 import {
@@ -16,6 +15,9 @@ import {
 } from './entities/transaction.entity';
 import { UpdateWalletBalanceDto } from './dto/update-wallet.dto';
 import { CreateTransaction } from './dto/transaction.dto';
+import { CreateWalletRequest, UpdateWalletRequest } from 'types/proto/wallet';
+import { TRADE_TYPE } from '@forex-marketplace/common';
+import { User } from 'types/proto/auth';
 
 @Injectable()
 export class WalletsService {
@@ -34,12 +36,26 @@ export class WalletsService {
     const wallet = await this.walletRepository.save(createPayload);
     return wallet;
   }
+
+  async getTradeWallet({ userId, currency }: CreateWalletRequest) {
+    const wallet = await this.walletRepository.findOne({
+      where: { userId, currency },
+    });
+    if (wallet) return wallet;
+
+    const createPayload = this.walletRepository.create({
+      userId,
+      currency,
+    });
+
+    return this.walletRepository.save(createPayload);
+  }
   async getUserWallet(
-    user: User,
+    filter: { userId: string; currency: string },
     manager: EntityManager = this.walletRepository.manager
   ) {
     const wallet = await manager.findOne(WalletEntity, {
-      where: { userId: user.id },
+      where: filter,
     });
 
     if (!wallet) {
@@ -48,15 +64,34 @@ export class WalletsService {
 
     return wallet;
   }
+  async getOrCreateUserWallet(
+    filter: { userId: string; currency: string },
+    manager: EntityManager = this.walletRepository.manager
+  ) {
+    const wallet = await manager.findOne(WalletEntity, {
+      where: filter,
+    });
+
+    if (!wallet) {
+      const createWallet = manager.create(WalletEntity, filter);
+      return manager.save(createWallet);
+    }
+
+    return wallet;
+  }
 
   async credit(creditWalletDto: UpdateWalletBalanceDto) {
-    const { amount, user } = creditWalletDto;
+    const { amount, userId, currency } = creditWalletDto;
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
-      let wallet = await this.getUserWallet(user, queryRunner.manager);
+      const userWalletFilter = { currency, userId };
+      const wallet = await this.getOrCreateUserWallet(
+        userWalletFilter,
+        queryRunner.manager
+      );
       const balanceBefore = wallet.balance;
 
       wallet.balance += amount;
@@ -66,7 +101,7 @@ export class WalletsService {
       const transaction = this.transactionRepository.create(
         new CreateTransaction(
           wallet,
-          user,
+          { id: userId } as User,
           amount,
           TransactionType.CREDIT,
           balanceBefore
@@ -75,11 +110,10 @@ export class WalletsService {
       await queryRunner.manager.save(WalletTransactionEntity, transaction);
 
       await queryRunner.commitTransaction();
-      wallet = await this.getUserWallet(user);
-      return {
-        message: 'Wallet credited successfully',
-        balance: wallet.balance,
-      };
+
+      return await this.walletRepository.findOne({
+        where: { id: wallet.id },
+      });
     } catch (err) {
       await queryRunner.rollbackTransaction();
       this.logger.error(err);
@@ -89,13 +123,17 @@ export class WalletsService {
     }
   }
 
-  async debit({ user, amount }: UpdateWalletBalanceDto) {
+  async debit({ userId, amount, currency }: UpdateWalletBalanceDto) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
-      let wallet = await this.getUserWallet(user, queryRunner.manager);
+      const userWalletFilter = { currency, userId };
+      const wallet = await this.getOrCreateUserWallet(
+        userWalletFilter,
+        queryRunner.manager
+      );
       const balanceBefore = wallet.balance;
 
       if (wallet.balance < amount)
@@ -107,7 +145,7 @@ export class WalletsService {
       const transaction = this.transactionRepository.create(
         new CreateTransaction(
           wallet,
-          user,
+          { id: userId } as User,
           amount,
           TransactionType.DEBIT,
           balanceBefore
@@ -116,17 +154,30 @@ export class WalletsService {
       await queryRunner.manager.save(transaction);
 
       await queryRunner.commitTransaction();
-      wallet = await this.getUserWallet(user);
-      return {
-        message: 'Wallet debited successfully',
-        balance: wallet.balance,
-      };
+
+      return await this.walletRepository.findOne({
+        where: { id: wallet.id },
+      });
     } catch (error) {
       await queryRunner.rollbackTransaction();
-      throw new BadRequestException(error.message || 'Transaction failed');
+      throw new UnprocessableEntityException(
+        error.message || 'Transaction failed'
+      );
     } finally {
       await queryRunner.release();
     }
+  }
+
+  async tradeTranx({ type, userId, amount, currency }: UpdateWalletRequest) {
+    if (type == TRADE_TYPE.BUY) {
+      return await this.debit({ userId, amount, currency });
+    }
+
+    if (type == TRADE_TYPE.SELL) {
+      return await this.credit({ amount, userId, currency });
+    }
+
+    throw new BadRequestException(`Trade type (${type}) is not supported`);
   }
 
   private async validateCreateWallet({ currency, userId }: CreateWalletDto) {
