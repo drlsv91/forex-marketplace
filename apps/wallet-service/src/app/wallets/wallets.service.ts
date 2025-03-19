@@ -14,9 +14,9 @@ import {
   WalletTransactionEntity,
 } from './entities/transaction.entity';
 import { UpdateWalletBalanceDto } from './dto/update-wallet.dto';
-import { CreateTransaction } from './dto/transaction.dto';
+import { CreateTransaction, ListTranxDto } from './dto/transaction.dto';
 import { CreateWalletRequest, UpdateWalletRequest } from 'types/proto/wallet';
-import { TRADE_TYPE } from '@forex-marketplace/common';
+import { PageDto, TRADE_TYPE } from '@forex-marketplace/common';
 import { User } from 'types/proto/auth';
 
 @Injectable()
@@ -81,7 +81,7 @@ export class WalletsService {
   }
 
   async credit(creditWalletDto: UpdateWalletBalanceDto) {
-    const { amount, userId, currency } = creditWalletDto;
+    const { amount, userId, currency, trxType } = creditWalletDto;
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -103,7 +103,7 @@ export class WalletsService {
           wallet,
           { id: userId } as User,
           amount,
-          TransactionType.CREDIT,
+          trxType ?? TransactionType.CREDIT,
           balanceBefore
         )
       );
@@ -123,7 +123,7 @@ export class WalletsService {
     }
   }
 
-  async debit({ userId, amount, currency }: UpdateWalletBalanceDto) {
+  async debit({ userId, amount, currency, trxType }: UpdateWalletBalanceDto) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -147,7 +147,7 @@ export class WalletsService {
           wallet,
           { id: userId } as User,
           amount,
-          TransactionType.DEBIT,
+          trxType ?? TransactionType.DEBIT,
           balanceBefore
         )
       );
@@ -170,14 +170,38 @@ export class WalletsService {
 
   async tradeTranx({ type, userId, amount, currency }: UpdateWalletRequest) {
     if (type == TRADE_TYPE.BUY) {
-      return await this.debit({ userId, amount, currency });
+      return await this.debit({
+        userId,
+        amount,
+        currency,
+        trxType: TransactionType.TRADE,
+      });
     }
 
     if (type == TRADE_TYPE.SELL) {
-      return await this.credit({ amount, userId, currency });
+      return await this.credit({
+        amount,
+        userId,
+        currency,
+        trxType: TransactionType.TRADE,
+      });
     }
 
     throw new BadRequestException(`Trade type (${type}) is not supported`);
+  }
+
+  async getTransactions(dto: ListTranxDto) {
+    const [items, count] = await this.transactionRepository.findAndCount({
+      where: {
+        userId: dto.user.id,
+        walletId: dto.walletId,
+      },
+      take: dto.pageSize,
+      skip: dto.skip,
+      order: { createdAt: dto.order },
+    });
+
+    return new PageDto(items, count, dto);
   }
 
   private async validateCreateWallet({ currency, userId }: CreateWalletDto) {

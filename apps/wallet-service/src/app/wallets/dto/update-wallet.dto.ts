@@ -1,9 +1,8 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { CreateWalletDto } from './create-wallet.dto';
-import { IsCurrency, IsPositive } from 'class-validator';
-import { User } from 'types/proto/auth';
-import { TransformCurrency } from '@forex-marketplace/common';
-
+import { IsNotEmpty, IsPositive, Matches } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { TransactionType } from '../entities/transaction.entity';
 export class UpdateWalletDto extends PartialType(CreateWalletDto) {}
 
 export class UpdateWalletBalanceDto {
@@ -12,7 +11,16 @@ export class UpdateWalletBalanceDto {
   @IsPositive()
   amount: number;
 
-  @IsCurrency()
-  @TransformCurrency()
+  @ApiProperty({
+    description: 'Currency 3-letter ISO 4217 code',
+    example: 'USD',
+  })
+  @IsNotEmpty()
+  @Matches(/^[A-Z]{3}$/, {
+    message: 'Currency must be a 3-letter ISO 4217 code (e.g., USD, EUR, GBP)',
+  })
+  @Transform(({ value }) => value.toUpperCase().replace(/\s/g, ''))
   currency: string;
+
+  trxType?: TransactionType;
 }

@@ -1,6 +1,6 @@
-import { IsCurrency, TransformCurrency } from '@forex-marketplace/common';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsUUID, MaxLength } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsNotEmpty, IsUUID, Matches } from 'class-validator';
 
 export class CreateWalletDto {
   @ApiProperty({
@@ -11,8 +11,10 @@ export class CreateWalletDto {
   userId: string;
 
   @IsNotEmpty()
-  @IsCurrency()
-  @TransformCurrency()
+  @Matches(/^[A-Z]{3}$/, {
+    message: 'Currency must be a 3-letter ISO 4217 code (e.g., USD, EUR, GBP)',
+  })
+  @Transform(({ value }) => value.toUpperCase().replace(/\s/g, ''))
   @ApiProperty({ description: 'currency', example: 'USD' })
   currency: string;
 }

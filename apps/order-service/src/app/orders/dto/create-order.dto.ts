@@ -1,13 +1,16 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { User } from 'types/proto/auth';
 import { ORDER_TYPE } from '../entities/order.entity';
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional, Min } from 'class-validator';
 import {
-  IsCurrencyPair,
-  IsFutureDate,
-  TransformCurrencyPair,
-  TRADE_TYPE,
-} from '@forex-marketplace/common';
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  Matches,
+  Min,
+} from 'class-validator';
+import { IsFutureDate, TRADE_TYPE } from '@forex-marketplace/common';
+import { Transform } from 'class-transformer';
 
 export class CreateOrderDto {
   user: User;
@@ -16,8 +19,10 @@ export class CreateOrderDto {
     example: 'EUR/USD',
   })
   @IsNotEmpty()
-  @IsCurrencyPair()
-  @TransformCurrencyPair()
+  @Matches(/^[A-Z]{3}\/[A-Z]{3}$/, {
+    message: 'Currency pair must be in format XXX/YYY (e.g., USD/EUR)',
+  })
+  @Transform(({ value }) => value.toUpperCase().replace(/\s/g, '')) // Transform to UPPERCASE & remove spaces
   currencyPair: string;
 
   @ApiProperty({ description: 'Type of order', example: 'LIMIT' })

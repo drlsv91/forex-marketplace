@@ -1,12 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { AbstractDto, TransformCurrency } from '@forex-marketplace/common';
+import { AbstractDto } from '@forex-marketplace/common';
 import { WalletEntity } from '../entities/wallet.entity';
 import {
   TransactionStatus,
   TransactionType,
   WalletTransactionEntity,
 } from '../entities/transaction.entity';
-import { IsCurrency, IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, Matches } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class WalletResponse extends AbstractDto {
   @ApiProperty({
@@ -77,10 +78,12 @@ export class WalletTransactionResponse extends AbstractDto {
 }
 
 export class GetUserWalletDto {
-  @IsNotEmpty()
-  @IsCurrency()
-  @TransformCurrency()
   @ApiProperty({ description: 'currency', example: 'USD' })
+  @IsNotEmpty()
+  @Matches(/^[A-Z]{3}$/, {
+    message: 'Currency must be a 3-letter ISO 4217 code (e.g., USD, EUR, GBP)',
+  })
+  @Transform(({ value }) => value.toUpperCase().replace(/\s/g, ''))
   currency: string;
 
   userId: string;

@@ -5,6 +5,9 @@ import {
 } from '../entities/transaction.entity';
 import { WalletEntity } from '../entities/wallet.entity';
 import { User } from 'types/proto/auth';
+import { PageOptionsDto } from '@forex-marketplace/common';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { IsOptional, IsUUID } from 'class-validator';
 
 export class CreateTransaction {
   walletId: string;
@@ -41,4 +44,13 @@ export class CreateTransaction {
     const randomPart = randomBytes(3).toString('hex').toUpperCase();
     return `${prefix}${timestamp}${randomPart}`;
   }
+}
+
+export class ListTranxDto extends PageOptionsDto {
+  user: User;
+
+  @ApiPropertyOptional({ description: 'allow filtering by wallet ID' })
+  @IsUUID()
+  @IsOptional()
+  walletId: string;
 }

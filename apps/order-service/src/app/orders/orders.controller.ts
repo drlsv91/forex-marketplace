@@ -7,6 +7,7 @@ import {
   UseGuards,
   Query,
   ParseUUIDPipe,
+  Put,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -44,13 +45,15 @@ export class OrdersController {
     dto.user = user;
     return this.ordersService.listOrders(dto);
   }
-  @Post('/execute')
+  @Put('/:orderId/execute')
   @UseGuards(JwtAuardGuard)
   async executeOrder(
     @Body() executeOrderDto: ExecuteOrderDto,
+    @Param('orderId', ParseUUIDPipe) orderId: string,
     @currentUser() user: User
   ) {
     executeOrderDto.user = user;
+    executeOrderDto.orderId = orderId;
     return this.ordersService.executeOrder(executeOrderDto);
   }
   @Get('/:orderId/transactions')

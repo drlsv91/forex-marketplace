@@ -13,11 +13,47 @@ import { Observable } from 'rxjs';
 import { User } from 'types/proto/auth';
 import { UpdateWalletBalanceDto } from './dto/update-wallet.dto';
 import { GetUserWalletDto } from './dto/wallet-response.dto';
+import { ListTranxDto } from './dto/transaction.dto';
 
 @Controller('wallets')
 @WalletServiceControllerMethods()
 export class WalletsController implements WalletServiceController {
   constructor(private readonly walletsService: WalletsService) {}
+
+  @Post('/credit')
+  @UseGuards(JwtAuardGuard)
+  async creditWallet(
+    @Body() creditWalletDto: UpdateWalletBalanceDto,
+    @currentUser() user: User
+  ) {
+    creditWalletDto.userId = user.id;
+    return this.walletsService.credit(creditWalletDto);
+  }
+  @Post('/debit')
+  @UseGuards(JwtAuardGuard)
+  async debitWallet(
+    @Body() creditWalletDto: UpdateWalletBalanceDto,
+    @currentUser() user: User
+  ) {
+    creditWalletDto.userId = user.id;
+    return this.walletsService.debit(creditWalletDto);
+  }
+  @Get('/transactions')
+  @UseGuards(JwtAuardGuard)
+  async getTransactions(@Query() dto: ListTranxDto, @currentUser() user: User) {
+    dto.user = user;
+    return this.walletsService.getTransactions(dto);
+  }
+
+  @Get()
+  @UseGuards(JwtAuardGuard)
+  async getUserWallet(
+    @currentUser() user: User,
+    @Query() dto: GetUserWalletDto
+  ) {
+    dto.userId = user.id;
+    return this.walletsService.getUserWallet(dto);
+  }
   trade(
     request: UpdateWalletRequest
   ):
@@ -42,31 +78,5 @@ export class WalletsController implements WalletServiceController {
     | Observable<CreateWalletResponse>
     | CreateWalletResponse {
     return this.walletsService.create(request);
-  }
-
-  @Post('/credit')
-  @UseGuards(JwtAuardGuard)
-  async creditWallet(
-    @Body() creditWalletDto: UpdateWalletBalanceDto,
-    @currentUser() user: User
-  ) {
-    creditWalletDto.userId = user.id;
-    return this.walletsService.credit(creditWalletDto);
-  }
-  @Post('/debit')
-  @UseGuards(JwtAuardGuard)
-  async debitWallet(
-    @Body() creditWalletDto: UpdateWalletBalanceDto,
-    @currentUser() user: User
-  ) {
-    creditWalletDto.userId = user.id;
-    return this.walletsService.debit(creditWalletDto);
-  }
-
-  @Get()
-  @UseGuards(JwtAuardGuard)
-  async create(@currentUser() user: User, @Query() dto: GetUserWalletDto) {
-    dto.userId = user.id;
-    return this.walletsService.getUserWallet(dto);
   }
 }

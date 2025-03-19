@@ -19,13 +19,40 @@ export class OrderTransactionEntity extends AbstractEntity<OrderTransactionRespo
   })
   order: OrderEntity;
 
-  @Column({ type: 'numeric', precision: 18, scale: 8 })
+  @Column({
+    type: 'decimal',
+    scale: 8,
+    precision: 18,
+    default: 0.0,
+    transformer: {
+      from: (value) => parseFloat(value),
+      to: (value) => value,
+    },
+  })
   executedAmount: number;
 
-  @Column({ type: 'numeric', precision: 18, scale: 8 })
+  @Column({
+    type: 'decimal',
+    scale: 8,
+    precision: 18,
+    default: 0.0,
+    transformer: {
+      from: (value) => parseFloat(value),
+      to: (value) => value,
+    },
+  })
   executionPrice: number;
 
-  @Column({ type: 'numeric', precision: 18, scale: 8, default: 0 })
+  @Column({
+    type: 'decimal',
+    scale: 8,
+    precision: 18,
+    default: 0.0,
+    transformer: {
+      from: (value) => parseFloat(value),
+      to: (value) => value,
+    },
+  })
   fee: number;
 
   @Column({

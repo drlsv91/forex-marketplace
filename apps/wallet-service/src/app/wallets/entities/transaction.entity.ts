@@ -30,9 +30,9 @@ export class WalletTransactionEntity extends AbstractEntity<WalletTransactionRes
 
   @Column({ type: 'decimal', scale: 8, precision: 18 })
   amount: number;
-  @Column({ type: 'decimal', scale: 8, precision: 18 })
+  @Column({ type: 'decimal', scale: 8, precision: 18, nullable: true })
   balanceBefore: number;
-  @Column({ type: 'decimal', scale: 8, precision: 18 })
+  @Column({ type: 'decimal', scale: 8, precision: 18, nullable: true })
   balanceAfter: number;
   @Column({ type: 'varchar', length: 50, unique: true })
   reference: string;

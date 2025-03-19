@@ -110,6 +110,8 @@ export class OrdersService implements OnModuleInit {
         );
       }
 
+      order.executedAmount = executedAmount;
+      order.executionPrice = executionPrice;
       if (order.tradeType === TRADE_TYPE.SELL) {
         // implement assest "lock"  as reserved
         await firstValueFrom(
@@ -127,8 +129,6 @@ export class OrdersService implements OnModuleInit {
       } else {
         order.status = ORDER_STATUS.PARIALLY_FILLED;
       }
-
-      order.executionPrice = executionPrice;
 
       const orderTrx = this.orderTrxRepository.create({
         order,
@@ -200,7 +200,9 @@ export class OrdersService implements OnModuleInit {
       );
 
       if (wallet.balance < totalAmount) {
-        throw new BadRequestException('Insufficient balance');
+        throw new BadRequestException(
+          `Insufficient balance in (${baseCurrency}) currency`
+        );
       }
     }
 
@@ -213,7 +215,9 @@ export class OrdersService implements OnModuleInit {
       );
 
       if (wallet.balance < totalAmount) {
-        throw new BadRequestException('Insufficient assets to sell');
+        throw new BadRequestException(
+          `Insufficient assets(${quoteCurrency}) to sell`
+        );
       }
     }
   }
@@ -223,6 +227,14 @@ export class OrdersService implements OnModuleInit {
     manager: EntityManager = this.orderRepository.manager
   ) {
     const order = await this.getOrder(user, { id: orderId }, manager);
+
+    if (
+      ![ORDER_STATUS.PARIALLY_FILLED, ORDER_STATUS.PENDING].includes(
+        order.status
+      )
+    ) {
+      throw new BadRequestException(`Invalid order status`);
+    }
 
     const remainingAmount = order.amount - order.executedAmount;
 
