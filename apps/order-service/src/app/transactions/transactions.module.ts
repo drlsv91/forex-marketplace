@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
-import { TransactionsController } from './transactions.controller';
+import { DatabaseModule } from '@forex-marketplace/common';
+import { OrderTransactionEntity } from './entities/transaction.entity';
 
 @Module({
-  controllers: [TransactionsController],
+  imports: [DatabaseModule.forFeature([OrderTransactionEntity])],
   providers: [TransactionsService],
+  exports: [TransactionsService],
 })
 export class TransactionsModule {}

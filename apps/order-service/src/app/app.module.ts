@@ -17,6 +17,7 @@ import * as Joi from 'joi';
       validationSchema: Joi.object({
         DATABASE_URL: Joi.string().required(),
         WALLET_GRPC_URL: Joi.string().required(),
+        AUTH_GRPC_URL: Joi.string().required(),
       }),
     }),
     HealthModule,

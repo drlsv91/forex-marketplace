@@ -7,3 +7,4 @@ export * from './lib/database';
 export * from './lib/decorator';
 export * from './lib/guard';
 export * from './lib/types';
+export * from './lib/pagination';

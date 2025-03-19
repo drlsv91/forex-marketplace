@@ -32,7 +32,6 @@ export interface CreateWalletResponse {
   userId: string;
   currency: string;
   balance: number;
-  reservedFunds: number;
 }
 
 export const WALLET_PACKAGE_NAME = "wallet";

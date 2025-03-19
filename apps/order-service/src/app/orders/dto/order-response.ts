@@ -1,11 +1,16 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { AbstractDto, TRADE_TYPE } from '@forex-marketplace/common';
+import {
+  AbstractDto,
+  PageOptionsDto,
+  TRADE_TYPE,
+} from '@forex-marketplace/common';
 
 import {
   ORDER_STATUS,
   ORDER_TYPE,
   OrderEntity,
 } from '../entities/order.entity';
+import { User } from 'types/proto/auth';
 
 export class OrderResponse extends AbstractDto {
   @ApiProperty({
@@ -74,4 +79,8 @@ export class OrderResponse extends AbstractDto {
     this.executionPrice = order.executionPrice;
     this.expiresAt = order.expiresAt;
   }
+}
+
+export class ListOrderDto extends PageOptionsDto {
+  user: User;
 }

@@ -1,26 +1,39 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { OrderTransactionEntity } from './entities/transaction.entity';
+import { Repository } from 'typeorm';
+import { GetOrderTranxDto, ListTranxDto } from './dto/transaction-response.dto';
+import { PageDto } from '@forex-marketplace/common';
 
 @Injectable()
 export class TransactionsService {
-  create(createTransactionDto: CreateTransactionDto) {
-    return 'This action adds a new transaction';
-  }
+  constructor(
+    @InjectRepository(OrderTransactionEntity)
+    private readonly tranxRepository: Repository<OrderTransactionEntity>
+  ) {}
 
-  findAll() {
-    return `This action returns all transactions`;
-  }
+  async getByOrder(dto: GetOrderTranxDto) {
+    const [items, count] = await this.tranxRepository.findAndCount({
+      where: {
+        order: { id: dto.orderId, userId: dto.user.id },
+      },
+      take: dto.pageSize,
+      skip: dto.skip,
+      order: { createdAt: dto.order },
+    });
 
-  findOne(id: number) {
-    return `This action returns a #${id} transaction`;
+    return new PageDto(items, count, dto);
   }
+  async listTrnxs(dto: ListTranxDto) {
+    const [items, count] = await this.tranxRepository.findAndCount({
+      where: {
+        order: { userId: dto.user.id },
+      },
+      take: dto.pageSize,
+      skip: dto.skip,
+      order: { createdAt: dto.order },
+    });
 
-  update(id: number, updateTransactionDto: UpdateTransactionDto) {
-    return `This action updates a #${id} transaction`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} transaction`;
+    return new PageDto(items, count, dto);
   }
 }

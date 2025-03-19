@@ -24,7 +24,8 @@ import {
 } from '../transactions/entities/transaction.entity';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { TRADE_TYPE } from '@forex-marketplace/common';
+import { PageDto, TRADE_TYPE } from '@forex-marketplace/common';
+import { ListOrderDto } from './dto/order-response';
 
 @Injectable()
 export class OrdersService implements OnModuleInit {
@@ -167,6 +168,18 @@ export class OrdersService implements OnModuleInit {
     }
 
     return order;
+  }
+  async listOrders(dto: ListOrderDto) {
+    const [items, count] = await this.orderRepository.findAndCount({
+      where: {
+        userId: dto.user.id,
+      },
+      take: dto.pageSize,
+      skip: dto.skip,
+      order: { createdAt: dto.order },
+    });
+
+    return new PageDto(items, count, dto);
   }
 
   private async validateWalletBalance(data: {

@@ -19,18 +19,6 @@ export class WalletEntity extends AbstractEntity<WalletResponse> {
     },
   })
   balance: number;
-  @Column({
-    type: 'decimal',
-    scale: 8,
-    precision: 18,
-    default: 0.0,
-    transformer: {
-      from: (value) => parseFloat(value),
-      to: (value) => value,
-    },
-    nullable: true,
-  })
-  reservedFunds: number;
   @Column({ type: 'varchar', length: 10 })
   currency: string;
 

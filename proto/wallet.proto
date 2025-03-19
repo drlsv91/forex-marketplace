@@ -31,5 +31,4 @@ message CreateWalletResponse {
   string userId = 2;
   string currency = 3;
   double balance = 4;
-  double reservedFunds = 5;
 }
