@@ -8,3 +8,4 @@ export * from './lib/decorator';
 export * from './lib/guard';
 export * from './lib/types';
 export * from './lib/pagination';
+export * from './lib/constants';

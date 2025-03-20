@@ -1,7 +1,10 @@
 import { Module } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { OrdersController } from './orders.controller';
-import { DatabaseModule } from '@forex-marketplace/common';
+import {
+  DatabaseModule,
+  NOTIFICATION_SERVICE,
+} from '@forex-marketplace/common';
 import { OrderEntity } from './entities/order.entity';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { WALLET_PACKAGE_NAME, WALLET_SERVICE_NAME } from 'types/proto/wallet';
@@ -49,6 +52,17 @@ import { OrderTransactionEntity } from '../transactions/entities/transaction.ent
             package: RATE_PACKAGE_NAME,
             protoPath: join(__dirname, 'proto/rates.proto'),
             url: configService.getOrThrow('RATE_GRPC_URL'),
+          },
+        }),
+        inject: [ConfigService],
+      },
+      {
+        name: NOTIFICATION_SERVICE,
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.RMQ,
+          options: {
+            urls: [configService.get<string>('RABBITMQ_URI')],
+            queue: NOTIFICATION_SERVICE,
           },
         }),
         inject: [ConfigService],

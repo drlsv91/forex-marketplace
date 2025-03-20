@@ -22,9 +22,14 @@ import {
   OrderTransactionEntity,
   OrderTransactionStatus,
 } from '../transactions/entities/transaction.entity';
-import { ClientGrpc } from '@nestjs/microservices';
+import { ClientGrpc, ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { PageDto, TRADE_TYPE } from '@forex-marketplace/common';
+import {
+  NOTIFICATION_SERVICE,
+  NOTIFY_EMAIL_PATTERN,
+  PageDto,
+  TRADE_TYPE,
+} from '@forex-marketplace/common';
 import { ListOrderDto } from './dto/order-response';
 import { RATE_SERVICE_NAME, RateServiceClient } from 'types/proto/rates';
 
@@ -41,7 +46,9 @@ export class OrdersService implements OnModuleInit {
     @Inject(WALLET_SERVICE_NAME)
     private readonly clientWallet: ClientGrpc,
     @Inject(RATE_SERVICE_NAME)
-    private readonly clientRates: ClientGrpc
+    private readonly clientRates: ClientGrpc,
+    @Inject(NOTIFICATION_SERVICE)
+    private readonly notificationClient: ClientProxy
   ) {}
 
   async onModuleInit() {
@@ -79,7 +86,17 @@ export class OrdersService implements OnModuleInit {
       tradeType,
       expiresAt,
     });
-    return this.orderRepository.save(createOrder);
+    const order = await this.orderRepository.save(createOrder);
+    this.notificationClient.emit(NOTIFY_EMAIL_PATTERN, {
+      email: user.email,
+      subject: 'Order Placed Successfully',
+      body: `
+      Dear ${user.fullName},
+      Your order with Currency Pair (${currencyPair}), Amount: (${amount}), Price: (${price.toLocaleString()})
+      has been successfully placed and can be manually executed
+      `,
+    });
+    return order;
   }
 
   async executeOrder(executeOrderDto: ExecuteOrderDto) {
@@ -100,7 +117,6 @@ export class OrdersService implements OnModuleInit {
         this.ratesService.getRates({ baseCurrency })
       );
       const rates = ratesResponse.rates;
-      console.log('ratesResponse => ', rates);
 
       if (!rates) {
         throw new NotFoundException(
@@ -169,6 +185,18 @@ export class OrdersService implements OnModuleInit {
       await queryRunner.manager.save(order);
 
       await queryRunner.commitTransaction();
+
+      this.notificationClient.emit(NOTIFY_EMAIL_PATTERN, {
+        email: user.email,
+        subject: 'Order Executed Successfully',
+        body: `
+        Dear ${user.fullName},
+        Your order with Currency Pair (${
+          order.currencyPair
+        }), Amount: (${order.amount.toLocaleString()}), Price: (${order.pricePerUnit.toLocaleString()})
+        has been successfully executed
+        `,
+      });
 
       return orderTrx;
     } catch (error) {
