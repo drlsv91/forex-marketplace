@@ -17,7 +17,7 @@ async function bootstrap() {
     transport: Transport.GRPC,
     options: {
       package: WALLET_PACKAGE_NAME,
-      protoPath: join(__dirname, 'proto/wallet.proto'),
+      protoPath: join(__dirname, '../../libs/grpc/proto/wallet.proto'),
       url: app.get(ConfigService).getOrThrow('WALLET_GRPC_URL'),
     },
   });

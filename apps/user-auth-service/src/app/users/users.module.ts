@@ -21,7 +21,7 @@ import { join } from 'path';
           transport: Transport.GRPC,
           options: {
             package: WALLET_PACKAGE_NAME,
-            protoPath: join(__dirname, 'proto/wallet.proto'),
+            protoPath: join(__dirname, '../../libs/grpc/proto/wallet.proto'),
             url: configService.getOrThrow('WALLET_GRPC_URL'),
           },
         }),

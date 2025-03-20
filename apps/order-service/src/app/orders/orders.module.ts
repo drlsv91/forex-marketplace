@@ -28,7 +28,7 @@ import { OrderTransactionEntity } from '../transactions/entities/transaction.ent
           transport: Transport.GRPC,
           options: {
             package: WALLET_PACKAGE_NAME,
-            protoPath: join(__dirname, 'proto/wallet.proto'),
+            protoPath: join(__dirname, '../../libs/grpc/proto/wallet.proto'),
             url: configService.getOrThrow('WALLET_GRPC_URL'),
           },
         }),
@@ -41,7 +41,7 @@ import { OrderTransactionEntity } from '../transactions/entities/transaction.ent
           transport: Transport.GRPC,
           options: {
             package: AUTH_PACKAGE_NAME,
-            protoPath: join(__dirname, 'proto/auth.proto'),
+            protoPath: join(__dirname, '../../libs/grpc/proto/auth.proto'),
             url: configService.getOrThrow('AUTH_GRPC_URL'),
           },
         }),
@@ -53,7 +53,7 @@ import { OrderTransactionEntity } from '../transactions/entities/transaction.ent
           transport: Transport.GRPC,
           options: {
             package: RATE_PACKAGE_NAME,
-            protoPath: join(__dirname, 'proto/rates.proto'),
+            protoPath: join(__dirname, '../../libs/grpc/proto/rates.proto'),
             url: configService.getOrThrow('RATE_GRPC_URL'),
           },
         }),

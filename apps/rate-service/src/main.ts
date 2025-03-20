@@ -18,7 +18,7 @@ async function bootstrap() {
     transport: Transport.GRPC,
     options: {
       package: RATE_PACKAGE_NAME,
-      protoPath: join(__dirname, 'proto/rates.proto'),
+      protoPath: join(__dirname, '../../libs/grpc/proto/rates.proto'),
       url: app.get(ConfigService).getOrThrow('RATE_GRPC_URL'),
     },
   });
