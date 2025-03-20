@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { AbstractDto } from '@forex-marketplace/common';
 import { WalletEntity } from '../entities/wallet.entity';
 import {
@@ -6,7 +6,7 @@ import {
   TransactionType,
   WalletTransactionEntity,
 } from '../entities/transaction.entity';
-import { IsNotEmpty, Matches } from 'class-validator';
+import { IsNotEmpty, IsOptional, Matches } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class WalletResponse extends AbstractDto {
@@ -21,12 +21,18 @@ export class WalletResponse extends AbstractDto {
 
   @ApiProperty({ description: 'Wallet currency', example: 'USD' })
   currency: string;
+  @ApiProperty({
+    description: 'create timestamp',
+    example: new Date().toISOString(),
+  })
+  createdAt: Date;
 
   constructor(wallet: WalletEntity) {
     super(wallet);
     this.userId = wallet.userId;
     this.balance = wallet.balance;
     this.currency = wallet.currency;
+    this.createdAt = wallet.createdAt;
   }
 }
 
@@ -64,6 +70,11 @@ export class WalletTransactionResponse extends AbstractDto {
     example: 'REF_b786964602904aaa85491f40014f81a2',
   })
   reference: string;
+  @ApiProperty({
+    description: 'transaction description',
+    example: 'descriptions',
+  })
+  description: string;
 
   constructor(transaction: WalletTransactionEntity) {
     super(transaction);
@@ -74,12 +85,14 @@ export class WalletTransactionResponse extends AbstractDto {
     this.status = transaction.status;
     this.transactionType = transaction.transactionType;
     this.reference = transaction.reference;
+    this.description = transaction.description;
   }
 }
 
 export class GetUserWalletDto {
-  @ApiProperty({ description: 'currency', example: 'USD' })
+  @ApiPropertyOptional({ description: 'allow filtering by currency (e.g USD)' })
   @IsNotEmpty()
+  @IsOptional()
   @Matches(/^[A-Z]{3}$/, {
     message: 'Currency must be a 3-letter ISO 4217 code (e.g., USD, EUR, GBP)',
   })

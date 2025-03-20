@@ -5,10 +5,10 @@ import { FindOptionsOrderValue } from 'typeorm';
 import { Order } from './page.dto';
 
 export class PageOptionsDto {
-  @ApiPropertyOptional({ enum: Order, default: Order.ASC })
+  @ApiPropertyOptional({ enum: Order, default: Order.DESC })
   @IsEnum(Order)
   @IsOptional()
-  readonly order?: FindOptionsOrderValue = Order.ASC;
+  readonly order?: FindOptionsOrderValue = Order.DESC;
 
   @ApiPropertyOptional({
     minimum: 1,

@@ -26,10 +26,12 @@ import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { PageDto, TRADE_TYPE } from '@forex-marketplace/common';
 import { ListOrderDto } from './dto/order-response';
+import { RATE_SERVICE_NAME, RateServiceClient } from 'types/proto/rates';
 
 @Injectable()
 export class OrdersService implements OnModuleInit {
   private walletService: WalletServiceClient;
+  private ratesService: RateServiceClient;
   constructor(
     @InjectRepository(OrderEntity)
     private readonly orderRepository: Repository<OrderEntity>,
@@ -37,12 +39,17 @@ export class OrdersService implements OnModuleInit {
     private readonly orderTrxRepository: Repository<OrderTransactionEntity>,
     private readonly dataSource: DataSource,
     @Inject(WALLET_SERVICE_NAME)
-    private readonly clientWallet: ClientGrpc
+    private readonly clientWallet: ClientGrpc,
+    @Inject(RATE_SERVICE_NAME)
+    private readonly clientRates: ClientGrpc
   ) {}
 
   async onModuleInit() {
     this.walletService =
       this.clientWallet.getService<WalletServiceClient>(WALLET_SERVICE_NAME);
+
+    this.ratesService =
+      this.clientRates.getService<RateServiceClient>(RATE_SERVICE_NAME);
   }
 
   async placeOrder({
@@ -76,7 +83,7 @@ export class OrdersService implements OnModuleInit {
   }
 
   async executeOrder(executeOrderDto: ExecuteOrderDto) {
-    const { user, executedAmount, executionPrice } = executeOrderDto;
+    const { user, executedAmount } = executeOrderDto;
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -87,10 +94,30 @@ export class OrdersService implements OnModuleInit {
         executeOrderDto,
         queryRunner.manager
       );
-
       const [baseCurrency, quoteCurrency] = order.currencyPair.split('/');
+
+      const ratesResponse = await firstValueFrom(
+        this.ratesService.getRates({ baseCurrency })
+      );
+      const rates = ratesResponse.rates;
+      console.log('ratesResponse => ', rates);
+
+      if (!rates) {
+        throw new NotFoundException(
+          `No Forex rate found for ${baseCurrency} currency`
+        );
+      }
+
+      const executionPrice = rates[quoteCurrency];
+
+      if (!executionPrice) {
+        throw new NotFoundException(
+          `No Forex rate found for Qoute ${quoteCurrency} currency`
+        );
+      }
+
       const fee = 0.0005;
-      const totalAmount = order.amount * order.pricePerUnit + fee;
+      const totalAmount = order.amount * executionPrice + fee;
 
       await this.validateWalletBalance({
         totalAmount,

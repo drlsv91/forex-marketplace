@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package rate;
+
+service RateService {
+  rpc GetRates (RatesRequest) returns (RatesResponse);
+}
+
+message RatesRequest {
+  optional string base_currency = 1;
+}
+
+message RatesResponse {
+  map<string, double> rates = 1;
+}

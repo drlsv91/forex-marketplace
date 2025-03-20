@@ -12,18 +12,24 @@ import {
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { ExecuteOrderDto } from './dto/update-order.dto';
-import { ApiTags } from '@nestjs/swagger';
-import { currentUser, JwtAuardGuard } from '@forex-marketplace/common';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOkResponsePaginated,
+  currentUser,
+  JwtAuardGuard,
+} from '@forex-marketplace/common';
 import { User } from 'types/proto/auth';
 import { TransactionsService } from '../transactions/transactions.service';
 import {
   GetOrderTranxDto,
   ListTranxDto,
+  OrderTransactionResponse,
 } from '../transactions/dto/transaction-response.dto';
-import { ListOrderDto } from './dto/order-response';
+import { ListOrderDto, OrderResponse } from './dto/order-response';
 
 @Controller('orders')
 @ApiTags('Orders')
+@ApiBearerAuth()
 export class OrdersController {
   constructor(
     private readonly ordersService: OrdersService,
@@ -32,6 +38,10 @@ export class OrdersController {
 
   @Post('/')
   @UseGuards(JwtAuardGuard)
+  @ApiOkResponse({
+    type: OrderResponse,
+    description: 'place an order',
+  })
   async placeOrder(
     @Body() createOrderDto: CreateOrderDto,
     @currentUser() user: User
@@ -40,6 +50,9 @@ export class OrdersController {
     return this.ordersService.placeOrder(createOrderDto);
   }
   @Get('/')
+  @ApiOkResponsePaginated(OrderResponse, {
+    description: 'List orders paginated',
+  })
   @UseGuards(JwtAuardGuard)
   async listOrders(@Query() dto: ListOrderDto, @currentUser() user: User) {
     dto.user = user;
@@ -47,6 +60,10 @@ export class OrdersController {
   }
   @Put('/:orderId/execute')
   @UseGuards(JwtAuardGuard)
+  @ApiOkResponse({
+    type: OrderResponse,
+    description: 'execute an order',
+  })
   async executeOrder(
     @Body() executeOrderDto: ExecuteOrderDto,
     @Param('orderId', ParseUUIDPipe) orderId: string,
@@ -58,6 +75,9 @@ export class OrdersController {
   }
   @Get('/:orderId/transactions')
   @UseGuards(JwtAuardGuard)
+  @ApiOkResponsePaginated(OrderTransactionResponse, {
+    description: 'List an order transactions paginated',
+  })
   async getOrderTransactions(
     @Query() dto: GetOrderTranxDto,
     @currentUser() user: User,
@@ -69,6 +89,9 @@ export class OrdersController {
   }
   @Get('/transactions')
   @UseGuards(JwtAuardGuard)
+  @ApiOkResponsePaginated(OrderTransactionResponse, {
+    description: 'List order transactions paginated',
+  })
   async getTransactions(@Query() dto: ListTranxDto, @currentUser() user: User) {
     dto.user = user;
 

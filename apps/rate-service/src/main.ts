@@ -6,29 +6,29 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import { initApp } from '@forex-marketplace/common';
 import { GrpcOptions, Transport } from '@nestjs/microservices';
-import { WALLET_PACKAGE_NAME } from 'types/proto/wallet';
-import { join } from 'path';
+import { RATE_PACKAGE_NAME } from 'types/proto/rates';
 import { ConfigService } from '@nestjs/config';
+import { join } from 'path';
 import { Logger } from '@nestjs/common';
+
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  const app = await NestFactory.create(AppModule);
 
   app.connectMicroservice<GrpcOptions>({
     transport: Transport.GRPC,
     options: {
-      package: WALLET_PACKAGE_NAME,
-      protoPath: join(__dirname, 'proto/wallet.proto'),
-      url: app.get(ConfigService).getOrThrow('WALLET_GRPC_URL'),
+      package: RATE_PACKAGE_NAME,
+      protoPath: join(__dirname, 'proto/rates.proto'),
+      url: app.get(ConfigService).getOrThrow('RATE_GRPC_URL'),
     },
   });
   await initApp(app, {
     docs: {
-      title: 'Wallet Service',
-      description: 'API for wallet service',
-      tagName: 'Wallet',
+      title: 'Rates Service',
+      description: 'API for Forex Rates',
+      tagName: 'Rates',
     },
   });
-
   app.startAllMicroservices();
 }
 

@@ -10,6 +10,7 @@ import { AppModule } from './app/app.module';
 import { initApp } from '@forex-marketplace/common';
 import { AUTH_PACKAGE_NAME } from 'types/proto/auth';
 import { join } from 'path';
+import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
@@ -34,4 +35,4 @@ async function bootstrap() {
   app.startAllMicroservices();
 }
 
-bootstrap();
+bootstrap().catch((err) => Logger.error(err));

@@ -17,13 +17,4 @@ export class ExecuteOrderDto {
   @IsNumber()
   @Min(0.01)
   executedAmount: number;
-
-  @ApiProperty({
-    description: 'The price at which the order was executed',
-    example: 1.152,
-    minimum: 0.0001,
-  })
-  @IsNumber()
-  @Min(0.0001)
-  executionPrice: number;
 }

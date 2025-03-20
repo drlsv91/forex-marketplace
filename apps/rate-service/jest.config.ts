@@ -1,10 +1,10 @@
 export default {
-  displayName: 'shared-proto',
-  preset: '../jest.preset.js',
+  displayName: 'rate-service',
+  preset: '../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
     '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../coverage/shared-proto',
+  coverageDirectory: '../../coverage/apps/rate-service',
 };

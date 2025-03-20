@@ -5,6 +5,7 @@ import { DatabaseModule } from '@forex-marketplace/common';
 import { OrderEntity } from './entities/order.entity';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { WALLET_PACKAGE_NAME, WALLET_SERVICE_NAME } from 'types/proto/wallet';
+import { RATE_PACKAGE_NAME, RATE_SERVICE_NAME } from 'types/proto/rates';
 import { ConfigService } from '@nestjs/config';
 import { join } from 'path';
 import { AUTH_PACKAGE_NAME, AUTH_SERVICE_NAME } from 'types/proto/auth';
@@ -36,6 +37,18 @@ import { OrderTransactionEntity } from '../transactions/entities/transaction.ent
             package: AUTH_PACKAGE_NAME,
             protoPath: join(__dirname, 'proto/auth.proto'),
             url: configService.getOrThrow('AUTH_GRPC_URL'),
+          },
+        }),
+        inject: [ConfigService],
+      },
+      {
+        name: RATE_SERVICE_NAME,
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.GRPC,
+          options: {
+            package: RATE_PACKAGE_NAME,
+            protoPath: join(__dirname, 'proto/rates.proto'),
+            url: configService.getOrThrow('RATE_GRPC_URL'),
           },
         }),
         inject: [ConfigService],

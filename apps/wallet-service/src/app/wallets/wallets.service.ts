@@ -50,19 +50,22 @@ export class WalletsService {
 
     return this.walletRepository.save(createPayload);
   }
-  async getUserWallet(
+  async getUserWallets(
     filter: { userId: string; currency: string },
     manager: EntityManager = this.walletRepository.manager
   ) {
-    const wallet = await manager.findOne(WalletEntity, {
+    const wallets = await manager.find(WalletEntity, {
       where: filter,
     });
 
-    if (!wallet) {
-      throw new NotFoundException('Wallet does not exist');
-    }
+    const responseWallets = [];
 
-    return wallet;
+    if (wallets.length) {
+      for (const wallet of wallets) {
+        responseWallets.push(wallet.toDto());
+      }
+    }
+    return responseWallets;
   }
   async getOrCreateUserWallet(
     filter: { userId: string; currency: string },

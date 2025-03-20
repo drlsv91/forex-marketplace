@@ -11,6 +11,8 @@ import {
   OrderEntity,
 } from '../entities/order.entity';
 import { User } from 'types/proto/auth';
+import { IsNotEmpty, IsOptional, Matches } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class OrderResponse extends AbstractDto {
   @ApiProperty({

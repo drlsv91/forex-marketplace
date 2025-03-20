@@ -20,6 +20,7 @@ export class TransactionsService {
       take: dto.pageSize,
       skip: dto.skip,
       order: { createdAt: dto.order },
+      relations: { order: true },
     });
 
     return new PageDto(items, count, dto);
@@ -32,6 +33,7 @@ export class TransactionsService {
       take: dto.pageSize,
       skip: dto.skip,
       order: { createdAt: dto.order },
+      relations: { order: true },
     });
 
     return new PageDto(items, count, dto);
