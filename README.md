@@ -70,6 +70,14 @@ Run unit tests for all services:
 pnpm nx run-many --target=test --all
 ```
 
+## Running all services
+
+Run serve for all services:
+
+```sh
+pnpm nx run-many --target=serve --all
+```
+
 ## Docker Deployment
 
 To deploy the entire system using Docker, run:
