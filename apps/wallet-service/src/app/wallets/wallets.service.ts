@@ -20,7 +20,7 @@ import { User } from 'types/proto/auth';
 
 @Injectable()
 export class WalletsService {
-  private readonly logger = new Logger(WalletEntity.name);
+  private readonly logger = new Logger(WalletsService.name);
   constructor(
     @InjectRepository(WalletEntity)
     private readonly walletRepository: Repository<WalletEntity>,
@@ -50,7 +50,7 @@ export class WalletsService {
     return this.walletRepository.save(createPayload);
   }
   async getUserWallets(
-    filter: { userId: string; currency: string },
+    filter: { userId: string; currency?: string },
     manager: EntityManager = this.walletRepository.manager
   ) {
     const wallets = await manager.find(WalletEntity, {
@@ -70,15 +70,17 @@ export class WalletsService {
     filter: { userId: string; currency: string },
     manager: EntityManager = this.walletRepository.manager
   ) {
-    const wallet = await manager.findOne(WalletEntity, {
+    let wallet = await manager.findOne(WalletEntity, {
       where: filter,
     });
 
     if (!wallet) {
       const createWallet = manager.create(WalletEntity, filter);
-      return manager.save(createWallet);
+
+      wallet = await manager.save(createWallet);
     }
 
+    if (!wallet.balance) wallet.balance = 0;
     return wallet;
   }
 
@@ -94,6 +96,7 @@ export class WalletsService {
         userWalletFilter,
         queryRunner.manager
       );
+
       const balanceBefore = wallet.balance;
 
       wallet.balance += amount;
@@ -109,6 +112,7 @@ export class WalletsService {
           balanceBefore
         )
       );
+
       await queryRunner.manager.save(WalletTransactionEntity, transaction);
 
       await queryRunner.commitTransaction();
@@ -136,12 +140,14 @@ export class WalletsService {
         userWalletFilter,
         queryRunner.manager
       );
+
       const balanceBefore = wallet.balance;
 
       if (wallet.balance < amount)
         throw new BadRequestException('Insufficient balance');
 
       wallet.balance -= amount;
+
       await queryRunner.manager.save(wallet);
 
       const transaction = this.transactionRepository.create(

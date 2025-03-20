@@ -1,5 +1,5 @@
 import { plainToInstance } from 'class-transformer';
-import { EntityTarget } from 'typeorm';
+import { DataSource, EntityTarget } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { Dto, PrimaryKey, StoreKey } from './types';
 import {
@@ -195,6 +195,52 @@ export const getRepositoryMethods = <Entity extends Dto>(
         const methods = getTransactionManagerMethods(name as any);
         return await fn(methods);
       },
+      find: jest
+        .fn()
+        .mockImplementation(
+          async (
+            entityClass: EntityTarget<Entity>,
+            conditions: { where?: Record<string, any> } = {}
+          ) => {
+            const store = getStore(name as StoreKey);
+            return findByConditions<Entity>(store, conditions.where || {});
+          }
+        ),
+      findOne: jest
+        .fn()
+        .mockImplementation(
+          async (
+            entityClass: EntityTarget<Entity>,
+            conditions: { where?: Record<string, any> } = {}
+          ) => {
+            const store = getStore(name as StoreKey);
+            return findOneByConditions<Entity>(store, conditions.where || {});
+          }
+        ),
+      create: jest.fn().mockImplementation((record: Partial<Entity>) => {
+        const instance: any = plainToInstance(name as any, record);
+        instance.id = instance.id || uuidv4();
+        instance.toDto = () => instance;
+        instance.createdAt = new Date();
+        instance.updatedAt = new Date();
+        return instance;
+      }),
+
+      save: jest.fn().mockImplementation(async (record: Entity | Entity[]) => {
+        const store = getStore(name as StoreKey);
+        const records = Array.isArray(record) ? record : [record];
+        const savedRecords = records.map((record) => {
+          if (record.id) {
+            const index = store.findIndex((x) => x.id === record.id);
+            if (index !== -1) {
+              Object.assign(store[index], record);
+              return store[index];
+            }
+          }
+          return saveRecord(store, record);
+        });
+        return Array.isArray(record) ? savedRecords : savedRecords[0];
+      }),
     },
 
     createQueryBuilder: jest
@@ -287,3 +333,19 @@ export const getMockedConnectionProvider = <Entity extends Dto>(
     },
   };
 };
+
+export const getMockedDataSource = <Entity extends Dto>(
+  entity: EntityTarget<Entity>
+) => ({
+  provide: DataSource,
+  useValue: {
+    createQueryRunner: jest.fn().mockReturnValue({
+      connect: jest.fn(),
+      startTransaction: jest.fn(),
+      commitTransaction: jest.fn(),
+      rollbackTransaction: jest.fn(),
+      release: jest.fn(),
+      manager: getTransactionManagerMethods(entity as unknown as string),
+    }),
+  },
+});

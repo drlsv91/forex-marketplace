@@ -85,6 +85,7 @@ export class OrdersService implements OnModuleInit {
       orderType,
       tradeType,
       expiresAt,
+      status: ORDER_STATUS.PENDING,
     });
     const order = await this.orderRepository.save(createOrder);
     this.notificationClient.emit(NOTIFY_EMAIL_PATTERN, {
@@ -117,12 +118,6 @@ export class OrdersService implements OnModuleInit {
         this.ratesService.getRates({ baseCurrency })
       );
       const rates = ratesResponse.rates;
-
-      if (!rates) {
-        throw new NotFoundException(
-          `No Forex rate found for ${baseCurrency} currency`
-        );
-      }
 
       const executionPrice = rates[quoteCurrency];
 

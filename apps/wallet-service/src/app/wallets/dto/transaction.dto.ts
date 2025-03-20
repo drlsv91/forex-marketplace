@@ -52,5 +52,5 @@ export class ListTranxDto extends PageOptionsDto {
   @ApiPropertyOptional({ description: 'allow filtering by wallet ID' })
   @IsUUID()
   @IsOptional()
-  walletId: string;
+  walletId?: string;
 }
