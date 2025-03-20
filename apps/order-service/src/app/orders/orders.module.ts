@@ -7,11 +7,16 @@ import {
 } from '@forex-marketplace/common';
 import { OrderEntity } from './entities/order.entity';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { WALLET_PACKAGE_NAME, WALLET_SERVICE_NAME } from 'types/proto/wallet';
-import { RATE_PACKAGE_NAME, RATE_SERVICE_NAME } from 'types/proto/rates';
+import {
+  WALLET_PACKAGE_NAME,
+  WALLET_SERVICE_NAME,
+  RATE_PACKAGE_NAME,
+  RATE_SERVICE_NAME,
+  AUTH_PACKAGE_NAME,
+  AUTH_SERVICE_NAME,
+} from '@forex-marketplace/grpc';
 import { ConfigService } from '@nestjs/config';
 import { join } from 'path';
-import { AUTH_PACKAGE_NAME, AUTH_SERVICE_NAME } from 'types/proto/auth';
 import { TransactionsModule } from '../transactions/transactions.module';
 import { OrderTransactionEntity } from '../transactions/entities/transaction.entity';
 

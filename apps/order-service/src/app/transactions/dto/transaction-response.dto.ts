@@ -5,7 +5,7 @@ import {
   OrderTransactionStatus,
 } from '../entities/transaction.entity';
 import { OrderResponse } from '../../orders/dto/order-response';
-import { User } from 'types/proto/auth';
+import { User } from '@forex-marketplace/grpc';
 
 export class OrderTransactionResponse extends AbstractDto {
   @ApiProperty({

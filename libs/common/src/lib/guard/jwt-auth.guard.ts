@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { catchError, map, Observable, of, tap } from 'rxjs';
-import { AUTH_SERVICE_NAME, AuthServiceClient } from 'types/proto/auth';
+import { AUTH_SERVICE_NAME, AuthServiceClient } from '@forex-marketplace/grpc';
 
 @Injectable()
 export class JwtAuardGuard implements CanActivate, OnModuleInit {

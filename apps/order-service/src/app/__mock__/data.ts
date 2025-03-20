@@ -1,4 +1,4 @@
-import { User } from 'types/proto/auth';
+import { User } from '@forex-marketplace/grpc';
 import { faker } from '@faker-js/faker';
 
 export const user: User = {

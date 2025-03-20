@@ -1,7 +1,7 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { CreateOrderDto } from './create-order.dto';
 import { IsNumber, Min } from 'class-validator';
-import { User } from 'types/proto/auth';
+import { User } from '@forex-marketplace/grpc';
 
 export class UpdateOrderDto extends PartialType(CreateOrderDto) {}
 

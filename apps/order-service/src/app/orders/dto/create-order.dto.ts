@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { User } from 'types/proto/auth';
+import { User } from '@forex-marketplace/grpc';
 import { ORDER_TYPE } from '../entities/order.entity';
 import {
   IsEnum,

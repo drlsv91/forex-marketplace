@@ -36,14 +36,7 @@
       "plugin": "@nx/jest/plugin",
       "options": {
         "targetName": "test"
-      },
-      "exclude": [
-        "apps/user-auth-service-e2e/**/*",
-        "apps/wallet-service-e2e/**/*",
-        "apps/order-service-e2e/**/*",
-        "apps/rate-service-e2e/**/*",
-        "apps/notification-service-e2e/**/*"
-      ]
+      }
     }
   ],
   "defaultBase": "origin/main",
@@ -52,22 +45,6 @@
       "cache": true,
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"]
-    },
-    "build": {
-      "inputs": [
-        "{projectRoot}/**/*",
-        "{workspaceRoot}/lib/**/*",
-        "{workspaceRoot}/proto/*"
-      ],
-      "options": {
-        "assets": [
-          {
-            "glob": "*.proto",
-            "input": "proto",
-            "output": "proto"
-          }
-        ]
-      }
     }
   }
 }

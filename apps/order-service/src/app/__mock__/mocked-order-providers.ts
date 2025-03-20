@@ -9,8 +9,10 @@ import { OrderEntity } from '../orders/entities/order.entity';
 import { OrderTransactionEntity } from '../transactions/entities/transaction.entity';
 import { OrdersService } from '../orders/orders.service';
 import { of } from 'rxjs';
-import { WALLET_SERVICE_NAME } from 'types/proto/wallet';
-import { RATE_SERVICE_NAME } from 'types/proto/rates';
+import {
+  WALLET_SERVICE_NAME,
+  RATE_SERVICE_NAME,
+} from '@forex-marketplace/grpc';
 import { NOTIFICATION_SERVICE } from '@forex-marketplace/common';
 import { user } from './data';
 

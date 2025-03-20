@@ -4,15 +4,12 @@ import {
   PageOptionsDto,
   TRADE_TYPE,
 } from '@forex-marketplace/common';
-
 import {
   ORDER_STATUS,
   ORDER_TYPE,
   OrderEntity,
 } from '../entities/order.entity';
-import { User } from 'types/proto/auth';
-import { IsNotEmpty, IsOptional, Matches } from 'class-validator';
-import { Transform } from 'class-transformer';
+import { User } from '@forex-marketplace/grpc';
 
 export class OrderResponse extends AbstractDto {
   @ApiProperty({
