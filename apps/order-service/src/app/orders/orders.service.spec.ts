@@ -14,9 +14,7 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { of } from 'rxjs';
-import { OrderTransactionResponse } from '../transactions/dto/transaction-response.dto';
 import { OrderTransactionStatus } from '../transactions/entities/transaction.entity';
-import { OrderResponse } from './dto/order-response';
 import { faker } from '@faker-js/faker/.';
 
 const orders = [];
