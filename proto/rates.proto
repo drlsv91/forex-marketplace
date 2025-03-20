@@ -7,7 +7,7 @@ service RateService {
 }
 
 message RatesRequest {
-  optional string base_currency = 1;
+  optional string baseCurrency = 1;
 }
 
 message RatesResponse {
