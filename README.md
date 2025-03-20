@@ -9,9 +9,9 @@ This project is a microservices-based Forex marketplace built using **NestJS**, 
 The Forex Marketplace is a monorepo project composed of multiple microservices:
 
 1. **Wallet Service**: Manages user wallets and transactions.
-2. **Transaction and Order Service**: Handles forex transactions and orders.
-3. **User and Authentication Service**: Manages user registration, authentication, and profiles.
-4. **Integration/Rate Service**: Fetches forex rates from an external API and exposes them via gRPC.
+2. **Order Service**: Handles forex transactions and orders.
+3. **User Auth Service**: Manages user registration, authentication, and profiles.
+4. **Rate Service**: Fetches forex rates from an external API and exposes them via gRPC.
 5. **Notification Service**: Sends notifications to users after successful transactions.
 
 ## Run tasks
