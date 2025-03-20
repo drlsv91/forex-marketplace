@@ -13,7 +13,10 @@ import { FindOptionsWhere, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { ClientGrpc } from '@nestjs/microservices';
-import { WALLET_SERVICE_NAME, WalletServiceClient } from 'types/proto/wallet';
+import {
+  WALLET_SERVICE_NAME,
+  WalletServiceClient,
+} from '@forex-marketplace/grpc';
 
 @Injectable()
 export class UsersService implements OnModuleInit {

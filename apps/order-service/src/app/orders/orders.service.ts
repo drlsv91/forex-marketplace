@@ -32,9 +32,8 @@ import { firstValueFrom } from 'rxjs';
 import {
   NOTIFICATION_SERVICE,
   NOTIFY_EMAIL_PATTERN,
-  PageDto,
-  TRADE_TYPE,
-} from '@forex-marketplace/common';
+} from '@forex-marketplace/nestjs';
+import { PageDto, TRADE_TYPE } from '@forex-marketplace/common';
 import { ListOrderDto } from './dto/order-response';
 
 @Injectable()

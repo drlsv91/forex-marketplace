@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
 import { RedisService } from '@forex-marketplace/common';
-import { RatesRequest } from 'types/proto/rates';
+import { RatesRequest } from '@forex-marketplace/grpc';
 
 @Injectable()
 export class RatesService {

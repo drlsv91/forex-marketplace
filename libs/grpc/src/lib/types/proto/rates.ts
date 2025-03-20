@@ -5,8 +5,8 @@
 // source: proto/rates.proto
 
 /* eslint-disable */
-import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
-import { Observable } from 'rxjs';
+import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
+import { Observable } from "rxjs";
 
 export interface RatesRequest {
   baseCurrency?: string | undefined;
@@ -21,45 +21,27 @@ export interface RatesResponse_RatesEntry {
   value: number;
 }
 
-export const RATE_PACKAGE_NAME = 'rate';
-
 export interface RateServiceClient {
   getRates(request: RatesRequest): Observable<RatesResponse>;
 }
 
 export interface RateServiceController {
-  getRates(
-    request: RatesRequest
-  ): Promise<RatesResponse> | Observable<RatesResponse> | RatesResponse;
+  getRates(request: RatesRequest): Promise<RatesResponse> | Observable<RatesResponse> | RatesResponse;
 }
 
 export function RateServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ['getRates'];
+    const grpcMethods: string[] = ["getRates"];
     for (const method of grpcMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(
-        constructor.prototype,
-        method
-      );
-      GrpcMethod('RateService', method)(
-        constructor.prototype[method],
-        method,
-        descriptor
-      );
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcMethod("RateService", method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(
-        constructor.prototype,
-        method
-      );
-      GrpcStreamMethod('RateService', method)(
-        constructor.prototype[method],
-        method,
-        descriptor
-      );
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcStreamMethod("RateService", method)(constructor.prototype[method], method, descriptor);
     }
   };
 }
 
-export const RATE_SERVICE_NAME = 'RateService';
+export const RATE_SERVICE_NAME = "RateService";

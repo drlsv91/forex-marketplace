@@ -1,10 +1,7 @@
 import { Module } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { OrdersController } from './orders.controller';
-import {
-  DatabaseModule,
-  NOTIFICATION_SERVICE,
-} from '@forex-marketplace/common';
+import { DatabaseModule } from '@forex-marketplace/common';
 import { OrderEntity } from './entities/order.entity';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import {
@@ -15,6 +12,7 @@ import {
   AUTH_PACKAGE_NAME,
   AUTH_SERVICE_NAME,
 } from '@forex-marketplace/grpc';
+import { NOTIFICATION_SERVICE } from '@forex-marketplace/nestjs';
 import { ConfigService } from '@nestjs/config';
 import { join } from 'path';
 import { TransactionsModule } from '../transactions/transactions.module';

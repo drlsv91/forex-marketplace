@@ -5,7 +5,7 @@ import {
   RateServiceControllerMethods,
   RatesRequest,
   RatesResponse,
-} from 'types/proto/rates';
+} from '@forex-marketplace/grpc';
 import { Observable } from 'rxjs';
 import { ApiTags } from '@nestjs/swagger';
 import { RateQueryDto } from './query.dto';

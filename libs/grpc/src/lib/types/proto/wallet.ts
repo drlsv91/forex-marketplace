@@ -5,8 +5,8 @@
 // source: proto/wallet.proto
 
 /* eslint-disable */
-import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
-import { Observable } from 'rxjs';
+import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
+import { Observable } from "rxjs";
 
 export interface FilterWalletRequest {
   userId: string;
@@ -32,68 +32,41 @@ export interface CreateWalletResponse {
   balance: number;
 }
 
-export const WALLET_PACKAGE_NAME = 'wallet';
-
 export interface WalletServiceClient {
   createWallet(request: CreateWalletRequest): Observable<CreateWalletResponse>;
 
-  getTradeWallet(
-    request: FilterWalletRequest
-  ): Observable<CreateWalletResponse>;
+  getTradeWallet(request: FilterWalletRequest): Observable<CreateWalletResponse>;
 
   trade(request: UpdateWalletRequest): Observable<CreateWalletResponse>;
 }
 
 export interface WalletServiceController {
   createWallet(
-    request: CreateWalletRequest
-  ):
-    | Promise<CreateWalletResponse>
-    | Observable<CreateWalletResponse>
-    | CreateWalletResponse;
+    request: CreateWalletRequest,
+  ): Promise<CreateWalletResponse> | Observable<CreateWalletResponse> | CreateWalletResponse;
 
   getTradeWallet(
-    request: FilterWalletRequest
-  ):
-    | Promise<CreateWalletResponse>
-    | Observable<CreateWalletResponse>
-    | CreateWalletResponse;
+    request: FilterWalletRequest,
+  ): Promise<CreateWalletResponse> | Observable<CreateWalletResponse> | CreateWalletResponse;
 
   trade(
-    request: UpdateWalletRequest
-  ):
-    | Promise<CreateWalletResponse>
-    | Observable<CreateWalletResponse>
-    | CreateWalletResponse;
+    request: UpdateWalletRequest,
+  ): Promise<CreateWalletResponse> | Observable<CreateWalletResponse> | CreateWalletResponse;
 }
 
 export function WalletServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ['createWallet', 'getTradeWallet', 'trade'];
+    const grpcMethods: string[] = ["createWallet", "getTradeWallet", "trade"];
     for (const method of grpcMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(
-        constructor.prototype,
-        method
-      );
-      GrpcMethod('WalletService', method)(
-        constructor.prototype[method],
-        method,
-        descriptor
-      );
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcMethod("WalletService", method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(
-        constructor.prototype,
-        method
-      );
-      GrpcStreamMethod('WalletService', method)(
-        constructor.prototype[method],
-        method,
-        descriptor
-      );
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcStreamMethod("WalletService", method)(constructor.prototype[method], method, descriptor);
     }
   };
 }
 
-export const WALLET_SERVICE_NAME = 'WalletService';
+export const WALLET_SERVICE_NAME = "WalletService";

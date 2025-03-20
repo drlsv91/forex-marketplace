@@ -13,7 +13,7 @@ import {
   WALLET_SERVICE_NAME,
   RATE_SERVICE_NAME,
 } from '@forex-marketplace/grpc';
-import { NOTIFICATION_SERVICE } from '@forex-marketplace/common';
+import { NOTIFICATION_SERVICE } from '@forex-marketplace/nestjs';
 import { user } from './data';
 
 export const defaultWallet = {
