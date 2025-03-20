@@ -4,7 +4,7 @@ import {
   TransactionType,
 } from '../entities/transaction.entity';
 import { WalletEntity } from '../entities/wallet.entity';
-import { User } from 'types/proto/auth';
+import { User } from '@forex-marketplace/grpc';
 import { PageOptionsDto } from '@forex-marketplace/common';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsUUID } from 'class-validator';

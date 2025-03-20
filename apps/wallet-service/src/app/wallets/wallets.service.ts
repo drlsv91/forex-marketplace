@@ -14,9 +14,12 @@ import {
 } from './entities/transaction.entity';
 import { UpdateWalletBalanceDto } from './dto/update-wallet.dto';
 import { CreateTransaction, ListTranxDto } from './dto/transaction.dto';
-import { CreateWalletRequest, UpdateWalletRequest } from 'types/proto/wallet';
+import {
+  CreateWalletRequest,
+  UpdateWalletRequest,
+  User,
+} from '@forex-marketplace/grpc';
 import { PageDto, TRADE_TYPE } from '@forex-marketplace/common';
-import { User } from 'types/proto/auth';
 
 @Injectable()
 export class WalletsService {

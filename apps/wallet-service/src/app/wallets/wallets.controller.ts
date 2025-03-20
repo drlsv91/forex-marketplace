@@ -20,9 +20,9 @@ import {
   UpdateWalletRequest,
   WalletServiceController,
   WalletServiceControllerMethods,
-} from 'types/proto/wallet';
+  User,
+} from '@forex-marketplace/grpc';
 import { Observable } from 'rxjs';
-import { User } from 'types/proto/auth';
 import { UpdateWalletBalanceDto } from './dto/update-wallet.dto';
 import {
   GetUserWalletDto,

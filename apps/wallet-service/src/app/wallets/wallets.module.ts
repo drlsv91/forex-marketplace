@@ -5,7 +5,7 @@ import { DatabaseModule } from '@forex-marketplace/common';
 import { WalletEntity } from './entities/wallet.entity';
 import { WalletTransactionEntity } from './entities/transaction.entity';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { AUTH_PACKAGE_NAME, AUTH_SERVICE_NAME } from 'types/proto/auth';
+import { AUTH_PACKAGE_NAME, AUTH_SERVICE_NAME } from '@forex-marketplace/grpc';
 import { join } from 'path';
 import { ConfigService } from '@nestjs/config';
 @Module({
