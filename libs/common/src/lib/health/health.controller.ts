@@ -31,15 +31,6 @@ export class HealthController {
             port: this.configService.getOrThrow('REDIS_PORT'),
           },
         }),
-
-      // () =>
-      //   this.microservice.pingCheck('nats', {
-      //     transport: Transport.TCP,
-      //     options: {
-      //       host: this.natsConfig.host,
-      //       port: this.natsConfig.port,
-      //     },
-      //   }),
     ]);
   }
 }
