@@ -24,7 +24,13 @@ jobs:
           cache: 'pnpm' # Cache for pnpm
 
       - name: Install pnpm
-        run: npm install -g pnpm
+        run: |
+          npm install -g pnpm
+          echo "Adding pnpm to PATH"
+          echo "$(npm root -g)/pnpm/bin" >> $GITHUB_PATH
+
+      - name: Verify pnpm installation
+        run: pnpm --version
 
       - name: Setup protoc
         uses: arduino/setup-protoc@v3.0.0
