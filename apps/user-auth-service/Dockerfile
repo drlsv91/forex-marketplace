@@ -1,4 +1,4 @@
-FROM node:18-slim AS builder
+FROM node:20-slim AS builder
 
 WORKDIR /workspace
 
@@ -34,7 +34,7 @@ RUN pnpm install
 RUN pnpm nx build user-auth-service
 
 # Runner Stage
-FROM node:18-slim AS runner
+FROM node:20-slim AS runner
 
 # Install required system dependencies
 RUN apt-get update && apt-get install -y openssl
@@ -54,7 +54,7 @@ COPY --from=builder /workspace/libs/grpc/package.json ./libs/grpc/package.json
 
 
 # Install production dependencies using pnpm
-RUN pnpm install --prod
+RUN pnpm install --prod --frozen-lockfile
 
 COPY --from=builder /workspace/dist ./dist
 
