@@ -32,10 +32,18 @@ jobs:
       - name: Verify pnpm installation
         run: pnpm --version
 
+      - name: Debug pnpm cache
+        run: |
+          echo "pnpm cache directory: $(pnpm store path)"
+
+      - name: Clear pnpm cache
+        run: pnpm store prune
+
       - name: Setup protoc
         uses: arduino/setup-protoc@v3.0.0
 
-      - run: pnpm install --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - uses: nrwl/nx-set-shas@v4
 
