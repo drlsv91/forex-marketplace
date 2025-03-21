@@ -1,11 +1,11 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
 import { RedisService } from '@forex-marketplace/common';
 import { RatesRequest } from '@forex-marketplace/grpc';
 
 @Injectable()
-export class RatesService {
+export class RatesService implements OnModuleInit {
   private readonly logger = new Logger(RatesService.name);
   private readonly API_KEY: string;
   private readonly BASE_URL: string;
@@ -17,6 +17,10 @@ export class RatesService {
   ) {
     this.API_KEY = this.configService.get<string>('EXCHANGE_RATE_API_KEY');
     this.BASE_URL = this.configService.get<string>('EXCHANGE_RATE_BASE_URL');
+  }
+
+  async onModuleInit() {
+    await this.getRates({});
   }
 
   async getRates(request: RatesRequest): Promise<any> {
