@@ -1,6 +1,7 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseInterceptors } from '@nestjs/common';
 import { RatesService } from './rates.service';
 import {
+  GrpcLoggingInterceptor,
   RateServiceController,
   RateServiceControllerMethods,
   RatesRequest,
@@ -13,6 +14,7 @@ import { RateQueryDto } from './query.dto';
 @Controller('rates')
 @ApiTags('Rates')
 @RateServiceControllerMethods()
+@UseInterceptors(GrpcLoggingInterceptor)
 export class RatesController implements RateServiceController {
   constructor(private readonly ratesService: RatesService) {}
   getRates(

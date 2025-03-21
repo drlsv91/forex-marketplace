@@ -5,6 +5,7 @@ import {
   UseGuards,
   Res,
   HttpStatus,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -17,6 +18,7 @@ import {
   AuthenticateRequest,
   AuthServiceController,
   AuthServiceControllerMethods,
+  GrpcLoggingInterceptor,
   User,
 } from '@forex-marketplace/grpc';
 import { Observable } from 'rxjs';
@@ -25,6 +27,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 @Controller('auth')
 @ApiTags('Auth')
 @AuthServiceControllerMethods()
+@UseInterceptors(GrpcLoggingInterceptor)
 export class AuthController implements AuthServiceController {
   constructor(private readonly authService: AuthService) {}
 
