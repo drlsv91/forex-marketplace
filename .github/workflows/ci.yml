@@ -18,23 +18,25 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'pnpm' # Cache for pnpm
-
-      - name: Install pnpm
-        run: |
-          npm install -g pnpm
-          echo "Adding pnpm to PATH"
-          echo "$(npm root -g)/pnpm/bin" >> $GITHUB_PATH
+          cache: 'pnpm'
 
       - name: Verify pnpm installation
         run: pnpm --version
 
+      - name: Debug pnpm path
+        run: which pnpm
+
       - name: Debug pnpm cache
-        run: |
-          echo "pnpm cache directory: $(pnpm store path)"
+        run: echo "pnpm cache directory: $(pnpm store path)"
 
       - name: Clear pnpm cache
         run: pnpm store prune
@@ -47,5 +49,4 @@ jobs:
 
       - uses: nrwl/nx-set-shas@v4
 
-      # Nx Affected runs only tasks affected by the changes in this PR/commit. Learn more: https://nx.dev/ci/features/affected
       - run: npx nx affected -t lint test build
