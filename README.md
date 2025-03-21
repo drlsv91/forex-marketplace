@@ -94,7 +94,7 @@ Nx Console is an editor extension that enriches your developer experience. It le
 
 ## ERD Documentation
 
-The database schema for the Forex Marketplace is documented using [dbdiagrams.io](https://dbdocs.io/o.oluwaleye93/forex-marketplace). Below is the ERD for the system:
+The database schema for the Forex Marketplace is documented using [dbdiagrams.io](https://dbdiagram.io/). Below is the ERD for the system: [forex_marketplace](https://dbdocs.io/o.oluwaleye93/forex-marketplace)
 
 ## License
 
