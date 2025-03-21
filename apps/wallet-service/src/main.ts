@@ -4,9 +4,9 @@
  */
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
-import { initApp } from '@forex-marketplace/common';
+import { initApp } from '@forex-marketplace/nestjs';
 import { GrpcOptions, Transport } from '@nestjs/microservices';
-import { WALLET_PACKAGE_NAME } from 'types/proto/wallet';
+import { WALLET_PACKAGE_NAME } from '@forex-marketplace/grpc';
 import { join } from 'path';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
@@ -17,7 +17,7 @@ async function bootstrap() {
     transport: Transport.GRPC,
     options: {
       package: WALLET_PACKAGE_NAME,
-      protoPath: join(__dirname, 'proto/wallet.proto'),
+      protoPath: join(__dirname, '../../libs/grpc/proto/wallet.proto'),
       url: app.get(ConfigService).getOrThrow('WALLET_GRPC_URL'),
     },
   });

@@ -70,17 +70,17 @@ Run unit tests for all services:
 pnpm nx run-many --target=test --all
 ```
 
-## Running all services
+## Running Services Locally
 
-Run serve for all services:
+To start all services locally, use the following command:
 
 ```sh
-pnpm nx run-many --target=serve --all
+pnpm run start
 ```
 
-## Docker Deployment
+## Deploying Services with Docker
 
-To deploy the entire system using Docker, run:
+To deploy and run the entire system using Docker, make sure all environment variables for each service are properly configured (refer to the respective README.md files for details). Then, execute the following command:
 
 ```sh
 docker-compose up --build
@@ -95,3 +95,7 @@ Nx Console is an editor extension that enriches your developer experience. It le
 ## ERD Documentation
 
 The database schema for the Forex Marketplace is documented using [dbdiagrams.io](https://dbdocs.io/o.oluwaleye93/forex-marketplace). Below is the ERD for the system:
+
+## License
+
+This project is licensed under the MIT License.

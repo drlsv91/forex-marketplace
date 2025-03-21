@@ -5,7 +5,7 @@ import {
   getMockedConnectionProvider,
   getRepositoryMethods,
 } from '@forex-marketplace/testing';
-import { WALLET_SERVICE_NAME } from 'types/proto/wallet';
+import { WALLET_SERVICE_NAME } from '@forex-marketplace/grpc';
 import { of } from 'rxjs';
 
 export const mockWalletService = {

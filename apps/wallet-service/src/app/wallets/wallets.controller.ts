@@ -6,6 +6,7 @@ import {
   Body,
   Query,
   HttpStatus,
+  UseInterceptors,
 } from '@nestjs/common';
 import { WalletsService } from './wallets.service';
 import {
@@ -20,9 +21,10 @@ import {
   UpdateWalletRequest,
   WalletServiceController,
   WalletServiceControllerMethods,
-} from 'types/proto/wallet';
+  User,
+  GrpcLoggingInterceptor,
+} from '@forex-marketplace/grpc';
 import { Observable } from 'rxjs';
-import { User } from 'types/proto/auth';
 import { UpdateWalletBalanceDto } from './dto/update-wallet.dto';
 import {
   GetUserWalletDto,
@@ -36,6 +38,7 @@ import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 @ApiTags('Wallets')
 @ApiBearerAuth()
 @WalletServiceControllerMethods()
+@UseInterceptors(GrpcLoggingInterceptor)
 export class WalletsController implements WalletServiceController {
   constructor(private readonly walletsService: WalletsService) {}
 

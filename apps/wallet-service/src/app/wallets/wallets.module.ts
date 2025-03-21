@@ -5,7 +5,7 @@ import { DatabaseModule } from '@forex-marketplace/common';
 import { WalletEntity } from './entities/wallet.entity';
 import { WalletTransactionEntity } from './entities/transaction.entity';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { AUTH_PACKAGE_NAME, AUTH_SERVICE_NAME } from 'types/proto/auth';
+import { AUTH_PACKAGE_NAME, AUTH_SERVICE_NAME } from '@forex-marketplace/grpc';
 import { join } from 'path';
 import { ConfigService } from '@nestjs/config';
 @Module({
@@ -18,7 +18,7 @@ import { ConfigService } from '@nestjs/config';
           transport: Transport.GRPC,
           options: {
             package: AUTH_PACKAGE_NAME,
-            protoPath: join(__dirname, 'proto/auth.proto'),
+            protoPath: join(__dirname, '../../libs/grpc/proto/auth.proto'),
             url: configService.getOrThrow('AUTH_GRPC_URL'),
           },
         }),

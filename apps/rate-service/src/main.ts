@@ -4,9 +4,9 @@
  */
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
-import { initApp } from '@forex-marketplace/common';
+import { initApp } from '@forex-marketplace/nestjs';
 import { GrpcOptions, Transport } from '@nestjs/microservices';
-import { RATE_PACKAGE_NAME } from 'types/proto/rates';
+import { RATE_PACKAGE_NAME } from '@forex-marketplace/grpc';
 import { ConfigService } from '@nestjs/config';
 import { join } from 'path';
 import { Logger } from '@nestjs/common';
@@ -18,7 +18,7 @@ async function bootstrap() {
     transport: Transport.GRPC,
     options: {
       package: RATE_PACKAGE_NAME,
-      protoPath: join(__dirname, 'proto/rates.proto'),
+      protoPath: join(__dirname, '../../libs/grpc/proto/rates.proto'),
       url: app.get(ConfigService).getOrThrow('RATE_GRPC_URL'),
     },
   });

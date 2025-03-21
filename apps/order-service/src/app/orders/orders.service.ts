@@ -1,4 +1,10 @@
-import { WALLET_SERVICE_NAME, WalletServiceClient } from 'types/proto/wallet';
+import {
+  WALLET_SERVICE_NAME,
+  WalletServiceClient,
+  User,
+  RATE_SERVICE_NAME,
+  RateServiceClient,
+} from '@forex-marketplace/grpc';
 import {
   BadRequestException,
   Inject,
@@ -17,7 +23,6 @@ import {
   FindOptionsWhere,
   Repository,
 } from 'typeorm';
-import { User } from 'types/proto/auth';
 import {
   OrderTransactionEntity,
   OrderTransactionStatus,
@@ -27,11 +32,9 @@ import { firstValueFrom } from 'rxjs';
 import {
   NOTIFICATION_SERVICE,
   NOTIFY_EMAIL_PATTERN,
-  PageDto,
-  TRADE_TYPE,
-} from '@forex-marketplace/common';
+} from '@forex-marketplace/nestjs';
+import { PageDto, TRADE_TYPE } from '@forex-marketplace/common';
 import { ListOrderDto } from './dto/order-response';
-import { RATE_SERVICE_NAME, RateServiceClient } from 'types/proto/rates';
 
 @Injectable()
 export class OrdersService implements OnModuleInit {

@@ -2,7 +2,7 @@ import { Controller, UsePipes, ValidationPipe } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
 import { NotifyEmailDto } from './dto/notify-email.dto';
 import { NotificationService } from './notification.service';
-import { NOTIFY_EMAIL_PATTERN } from '@forex-marketplace/common';
+import { NOTIFY_EMAIL_PATTERN } from '@forex-marketplace/nestjs';
 
 @Controller()
 export class NotificationController {

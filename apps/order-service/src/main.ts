@@ -5,7 +5,7 @@
 
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
-import { initApp } from '@forex-marketplace/common';
+import { initApp } from '@forex-marketplace/nestjs';
 import { Logger } from '@nestjs/common';
 
 async function bootstrap() {

@@ -31,28 +31,40 @@ The Notification Service is responsible for sending notifications to users after
    ```bash
    pnpm install
    ```
+4. Set up environment variables:
+   Create a .env file in the root of the notification-service directory with the following content:
 
-## Environment Variables
-
-Create a .env file in the root of the notification-service directory:
+## For Docker Deployment:
 
 ```bash
-RABBITMQ_URI=
-GOOGLE_OAUTH_CLIENT_ID=
-GOOGLE_OAUTH_CLIENT_SECRET=
-GOOGLE_OAUTH_REFRESH_TOKEN=
-SMTP_USER=
+RABBITMQ_URI=amqp://rabbitmq:5672
+GOOGLE_OAUTH_CLIENT_ID=<google_oauth_client_id>
+GOOGLE_OAUTH_CLIENT_SECRET=<google_oath_client_secret>
+GOOGLE_OAUTH_REFRESH_TOKEN=<google_oauth_refresh_token>
+SMTP_USER=<google@gmail.com>
+```
+
+## For Local Development:
+
+```bash
+RABBITMQ_URI=amqp://localhost:5672
+GOOGLE_OAUTH_CLIENT_ID=<google_oauth_client_id>
+GOOGLE_OAUTH_CLIENT_SECRET=<google_oath_client_secret>
+GOOGLE_OAUTH_REFRESH_TOKEN=<google_oauth_refresh_token>
+SMTP_USER=<google@gmail.com>
 ```
 
 ## Running the Service
 
-1. Start the service:
+Start the service:
+
+## Locally:
 
 ```bash
   nx serve notification-service
 ```
 
-## Docker
+## Using Docker
 
 To run the service in a Docker container:
 

@@ -4,7 +4,10 @@ import { UsersController } from './users.controller';
 import { DatabaseModule } from '@forex-marketplace/common';
 import { UserEntity } from './entities/user.entity';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { WALLET_PACKAGE_NAME, WALLET_SERVICE_NAME } from 'types/proto/wallet';
+import {
+  WALLET_PACKAGE_NAME,
+  WALLET_SERVICE_NAME,
+} from '@forex-marketplace/grpc';
 import { ConfigService } from '@nestjs/config';
 import { join } from 'path';
 
@@ -18,7 +21,7 @@ import { join } from 'path';
           transport: Transport.GRPC,
           options: {
             package: WALLET_PACKAGE_NAME,
-            protoPath: join(__dirname, 'proto/wallet.proto'),
+            protoPath: join(__dirname, '../../libs/grpc/proto/wallet.proto'),
             url: configService.getOrThrow('WALLET_GRPC_URL'),
           },
         }),

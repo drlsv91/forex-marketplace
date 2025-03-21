@@ -7,8 +7,8 @@ import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { GrpcOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './app/app.module';
-import { initApp } from '@forex-marketplace/common';
-import { AUTH_PACKAGE_NAME } from 'types/proto/auth';
+import { initApp } from '@forex-marketplace/nestjs';
+import { AUTH_PACKAGE_NAME } from '@forex-marketplace/grpc';
 import { join } from 'path';
 import { Logger } from '@nestjs/common';
 
@@ -19,7 +19,7 @@ async function bootstrap() {
     transport: Transport.GRPC,
     options: {
       package: AUTH_PACKAGE_NAME,
-      protoPath: join(__dirname, 'proto/auth.proto'),
+      protoPath: join(__dirname, '../../libs/grpc/proto/auth.proto'),
       url: app.get(ConfigService).getOrThrow('AUTH_GRPC_URL'),
     },
   });

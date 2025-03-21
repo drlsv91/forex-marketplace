@@ -29,18 +29,33 @@ The Order Service handles the creation and management of forex transactions and 
    cd apps/order-service
    ```
 3. Install dependencies:
+
    ```bash
    pnpm install
    ```
 
-## Environment Variables
+4. Set up environment variables:
+   Create a .env file in the root of the order-service directory with the following content:
 
-Create a .env file in the root of the wallet-service directory:
+## For Docker Deployment:
 
 ```bash
-  DATABASE_URL=postgres://postgres:<password>@<host>:5432/<database_name>?schema=public
-  PORT=3002
+DATABASE_URL=postgres://postgres:forex_password@postgres:5432/forex_marketplace?schema=public
+  PORT=3005
   RABBITMQ_URI=amqp://rabbitmq:5672
+  REDIS_HOST=redis
+  REDIS_PORT=6379
+  AUTH_GRPC_URL=user-auth-service:50051
+  WALLET_GRPC_URL=wallet-service:50052
+  RATE_GRPC_URL=rate-service:50055
+```
+
+## For Local Development:
+
+```bash
+DATABASE_URL=postgres://postgres:forex_password@postgres:5432/forex_marketplace?schema=public
+  PORT=3005
+  RABBITMQ_URI=amqp://localhost:5672
   REDIS_HOST=localhost
   REDIS_PORT=6379
   AUTH_GRPC_URL=localhost:50051
@@ -52,11 +67,21 @@ Create a .env file in the root of the wallet-service directory:
 
 1. Start the service:
 
+## Locally
+
 ```bash
   nx serve order-service
 ```
 
-2. The service will be available at http://localhost:3002.
+## Using Docker
+
+To run the service in a Docker container:
+
+```bash
+  docker-compose up notification-service
+```
+
+2. The service will be available at http://localhost:3005.
 
 ## Testing
 
@@ -64,22 +89,10 @@ Create a .env file in the root of the wallet-service directory:
   nx test order-service
 ```
 
-## Docker
-
-To run the service in a Docker container:
-
-```bash
-  docker-compose up order-service
-```
-
-## License
-
-This project is licensed under the MIT License.
-
 ## Swagger Documentation:
 
 Once the service is running, you can access the Swagger documentation at:
 
 ```bash
-  http://localhost:3002/docs
+  http://localhost:3005/docs
 ```

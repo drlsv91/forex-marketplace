@@ -4,7 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UserResponse } from './dto/user-response.dto';
 import { currentUser } from '@forex-marketplace/common';
-import { User } from 'types/proto/auth';
+import { User } from '@forex-marketplace/grpc';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UserEntity } from './entities/user.entity';
 

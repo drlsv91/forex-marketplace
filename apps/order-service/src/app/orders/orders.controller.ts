@@ -18,7 +18,7 @@ import {
   currentUser,
   JwtAuardGuard,
 } from '@forex-marketplace/common';
-import { User } from 'types/proto/auth';
+import { User } from '@forex-marketplace/grpc';
 import { TransactionsService } from '../transactions/transactions.service';
 import {
   GetOrderTranxDto,

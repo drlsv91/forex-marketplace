@@ -1,10 +1,16 @@
-import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  OnModuleDestroy,
+  OnModuleInit,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
 
 @Injectable()
 export class RedisService implements OnModuleInit, OnModuleDestroy {
-  private client: Redis;
+  private readonly client: Redis;
+  private readonly logger = new Logger(RedisService.name);
 
   constructor(private readonly configService: ConfigService) {
     const host = this.configService.getOrThrow<string>('REDIS_HOST');
@@ -17,12 +23,12 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   }
 
   async onModuleInit() {
-    console.log('Connected to Redis');
+    this.logger.log('[Connected to Redis]');
   }
 
   async onModuleDestroy() {
     await this.client.quit();
-    console.log('Disconnected from Redis');
+    this.logger.log('[Disconnected from Redis]');
   }
 
   getClient(): Redis {

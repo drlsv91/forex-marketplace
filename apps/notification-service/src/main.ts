@@ -7,7 +7,7 @@ import { NestFactory } from '@nestjs/core';
 import { Logger as NestLogger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { RmqOptions, Transport } from '@nestjs/microservices';
-import { NOTIFICATION_SERVICE } from '@forex-marketplace/common';
+import { NOTIFICATION_SERVICE } from '@forex-marketplace/nestjs';
 import { NotificationModule } from './app/notification.module';
 import * as cookieParser from 'cookie-parser';
 import { Logger } from 'nestjs-pino';
@@ -26,6 +26,7 @@ async function bootstrap() {
   app.use(cookieParser());
 
   app.startAllMicroservices();
+  app.get(Logger).log(`🚀 Application [Notification] is running`);
 }
 
 bootstrap().catch((error) => NestLogger.error(error));

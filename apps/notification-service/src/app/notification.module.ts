@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { NotificationController } from './notification.controller';
-import { NotificationService } from './notification.service';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
 import { LoggerModule } from '@forex-marketplace/common';
+import { NotificationController } from './notification.controller';
+import { NotificationService } from './notification.service';
 
 @Module({
   imports: [
