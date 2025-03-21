@@ -27,13 +27,26 @@ The Rate Service is responsible for fetching current forex rates from an externa
    cd apps/rate-service
    ```
 3. Install dependencies:
+
    ```bash
    pnpm install
    ```
 
-## Environment Variables
+4. Set up environment variables:
+   Create a .env file in the root of the rate-service directory with the following content:
 
-Create a .env file in the root of the wallet-service directory:
+## For Docker Deployment:
+
+```bash
+EXCHANGE_RATE_API_KEY=<your_exchange_rate_api_key>
+EXCHANGE_RATE_BASE_URL=https://v6.exchangerate-api.com/v6
+PORT=3003
+REDIS_HOST=redis
+REDIS_PORT=6379
+RATE_GRPC_URL=rate-service:50055
+```
+
+## For Local Development:
 
 ```bash
 EXCHANGE_RATE_API_KEY=<your_exchange_rate_api_key>
@@ -42,15 +55,24 @@ PORT=3003
 RATE_GRPC_URL=localhost:50055
 REDIS_HOST=localhost
 REDIS_PORT=6379
-
 ```
 
 ## Running the Service
 
 1. Start the service:
 
+## Locally
+
 ```bash
   nx serve rate-service
+```
+
+## Using Docker
+
+To run the service in a Docker container:
+
+```bash
+  docker-compose up rate-service
 ```
 
 2. The service will be available at http://localhost:3003.

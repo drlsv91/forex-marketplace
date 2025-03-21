@@ -44,19 +44,31 @@ The API is documented using Swagger. After starting the service, you can access 
    pnpm install
 ```
 
-## Environment Variables
+4. Set up environment variables:
+   Create a .env file in the root of the user-auth-service directory with the following content:
 
-Create a .env file in the apps/user-auth-service directory:
+## For Docker Deployment:
 
 ```bash
-  DATABASE_URL=postgres://postgres:<password>@<host>:5432/<database_name>?schema=public
+DATABASE_URL=postgres://postgres:forex_password@postgres:5432/forex_marketplace?schema=public
   JWT_SECRET=<jwt_secret>
-  JWT_EXPIRATION_MS=3600
+  JWT_EXPIRATION_MS=36000
   PORT=3000
   RABBITMQ_URI=amqp://rabbitmq:5672
+  REDIS_HOST=redis
+  REDIS_PORT=6379
+```
+
+## For Local Development:
+
+```bash
+DATABASE_URL=postgres://postgres:forex_password@postgres:5432/forex_marketplace?schema=public
+  JWT_SECRET=<jwt_secret>
+  JWT_EXPIRATION_MS=36000
+  PORT=3000
+  RABBITMQ_URI=amqp://localhost:5672
   REDIS_HOST=localhost
   REDIS_PORT=6379
-
 ```
 
 ## Running the Service
@@ -79,4 +91,12 @@ Run unit tests for the User Auth Service:
 
 ```bash
    pnpm nx test user-auth-service
+```
+
+## Swagger Documentation:
+
+Once the service is running, you can access the Swagger documentation at:
+
+```bash
+  http://localhost:3000/docs
 ```
