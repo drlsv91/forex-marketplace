@@ -36,7 +36,7 @@ jobs:
         run: which pnpm
 
       - name: Debug pnpm cache
-        run: echo "pnpm cache directory: $(pnpm store path)"
+        run: sh -c "echo 'pnpm cache directory: $(pnpm store path)'"
 
       - name: Clear pnpm cache
         run: pnpm store prune
