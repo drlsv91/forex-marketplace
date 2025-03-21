@@ -39,7 +39,7 @@ Create a .env file in the root of the wallet-service directory:
 
 ```bash
   DATABASE_URL=postgres://postgres:<password>@<host>:5432/<database_name>?schema=public
-  PORT=3002
+  PORT=3005
   RABBITMQ_URI=amqp://rabbitmq:5672
   REDIS_HOST=localhost
   REDIS_PORT=6379
@@ -56,7 +56,7 @@ Create a .env file in the root of the wallet-service directory:
   nx serve order-service
 ```
 
-2. The service will be available at http://localhost:3002.
+2. The service will be available at http://localhost:3005.
 
 ## Testing
 
@@ -81,5 +81,5 @@ This project is licensed under the MIT License.
 Once the service is running, you can access the Swagger documentation at:
 
 ```bash
-  http://localhost:3002/docs
+  http://localhost:3005/docs
 ```
