@@ -20,7 +20,7 @@ The Rate Service is responsible for fetching current forex rates from an externa
 
 1. Clone the repository:
    ```bash
-   git clone https://ooluwaleye93@bitbucket.org/drlsv91/forex-marketplace.git
+   git clone https://github.com/drlsv91/forex-marketplace.git
    ```
 2. Navigate to the rate-service directory:
    ```bash

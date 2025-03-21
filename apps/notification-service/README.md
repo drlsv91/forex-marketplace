@@ -21,7 +21,7 @@ The Notification Service is responsible for sending notifications to users after
 
 1. Clone the repository:
    ```bash
-   git clone https://ooluwaleye93@bitbucket.org/drlsv91/forex-marketplace.git
+   git clone https://github.com/drlsv91/forex-marketplace.git
    ```
 2. Navigate to the notification-service directory:
    ```bash
