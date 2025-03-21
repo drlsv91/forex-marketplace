@@ -60,7 +60,7 @@ COPY --from=builder /workspace/dist ./dist
 
 
 # Expose the port the app runs on
-EXPOSE 3002
+EXPOSE 3005
 
 # Run the application
 CMD ["node", "dist/apps/order-service/main"]
