@@ -26,6 +26,7 @@ async function bootstrap() {
   app.use(cookieParser());
 
   app.startAllMicroservices();
+  app.get(Logger).log(`🚀 Application [Notification] is running`);
 }
 
 bootstrap().catch((error) => NestLogger.error(error));

@@ -2,7 +2,9 @@
   "name": "@forex-marketplace/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "start": "NODE_OPTIONS='--max-old-space-size=8192' nx run-many -t serve -p user-auth-service wallet-service rate-service order-service notification-service --parallel 5"
+  },
   "private": true,
   "dependencies": {
     "@nestjs/common": "^10.0.2",
@@ -29,9 +31,9 @@
     "pino-pretty": "^13.0.0",
     "reflect-metadata": "^0.1.14",
     "rxjs": "^7.8.0",
+    "tslib": "^2.3.0",
     "typeorm": "^0.3.21",
-    "uuid": "^11.1.0",
-    "tslib": "^2.3.0"
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",
@@ -65,6 +67,7 @@
     "ts-node": "10.9.1",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.19.0",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "webpack-merge": "^6.0.1"
   }
 }

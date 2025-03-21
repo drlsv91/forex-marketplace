@@ -51,10 +51,10 @@ COPY --from=builder /workspace/pnpm-workspace.yaml ./
 COPY --from=builder /workspace/apps/user-auth-service/package.json ./apps/user-auth-service/package.json
 COPY --from=builder /workspace/libs/grpc/package.json ./libs/grpc/package.json
 
-
+ENV NODE_ENV=production
 
 # Install production dependencies using pnpm
-RUN pnpm install --prod --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 
 COPY --from=builder /workspace/dist ./dist
 

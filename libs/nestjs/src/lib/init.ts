@@ -39,7 +39,7 @@ export async function initApp(
   await app.listen(port);
   app.get(Logger).log(
     `🚀 Application is running on: http://localhost:${port}/${globalPrefix}:
-      📖 docs: is running on: http://localhost:${port}/${docsUrl}
+      📖 docs: [${docs.tagName}] is running on: http://localhost:${port}/${docsUrl}
       `
   );
 }
