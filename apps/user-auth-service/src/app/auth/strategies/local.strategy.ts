@@ -14,7 +14,8 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
   async validate(email: string, password: string): Promise<any> {
     try {
-      return await this.userService.verifyUser(email, password);
+      const transformedEmail = email.toLowerCase().replace(/\s/g, '');
+      return await this.userService.verifyUser(transformedEmail, password);
     } catch (error) {
       throw new UnauthorizedException(error);
     }
