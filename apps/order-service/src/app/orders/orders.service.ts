@@ -232,11 +232,11 @@ export class OrdersService implements OnModuleInit {
       this.logger.log(`RETRY FETCH RATES: retry... ${this.retryCount}`);
     }
 
-    if (!ratesResponse) {
+    if (!ratesResponse?.rates) {
       throw new UnprocessableEntityException(`Rates could be fetched`);
     }
 
-    return rates;
+    return ratesResponse.rates;
   }
 
   private async validateWalletBalance(data: {
