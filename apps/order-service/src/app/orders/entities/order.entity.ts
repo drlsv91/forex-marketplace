@@ -1,6 +1,6 @@
 import { AbstractEntity, TRADE_TYPE } from '@forex-marketplace/common';
 import { Check, Column, Entity, OneToMany, UpdateDateColumn } from 'typeorm';
-import { OrderResponse } from '../dto/order-response';
+import { OrderResponse } from '../dto/order-response.dto';
 import { OrderTransactionEntity } from '../../transactions/entities/transaction.entity';
 
 export enum ORDER_TYPE {
@@ -13,7 +13,7 @@ export enum ORDER_TYPE {
 export enum ORDER_STATUS {
   PENDING = 'PENDING',
   FILLED = 'FILLED',
-  PARIALLY_FILLED = 'PARIALLY_FILLED',
+  PARTIALLY_FILLED = 'PARTIALLY_FILLED',
   CANCELLED = 'CANCELLED',
   EXPIRED = 'EXPIRED',
 }

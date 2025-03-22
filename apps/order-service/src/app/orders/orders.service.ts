@@ -35,7 +35,7 @@ import {
   NOTIFY_EMAIL_PATTERN,
 } from '@forex-marketplace/nestjs';
 import { PageDto, TRADE_TYPE } from '@forex-marketplace/common';
-import { ListOrderDto } from './dto/order-response';
+import { ListOrderDto } from './dto/order-response.dto';
 
 @Injectable()
 export class OrdersService implements OnModuleInit {
@@ -161,7 +161,7 @@ export class OrdersService implements OnModuleInit {
       if (order.executedAmount >= order.amount) {
         order.status = ORDER_STATUS.FILLED;
       } else {
-        order.status = ORDER_STATUS.PARIALLY_FILLED;
+        order.status = ORDER_STATUS.PARTIALLY_FILLED;
       }
 
       const orderTrx = this.orderTrxRepository.create({
@@ -286,7 +286,7 @@ export class OrdersService implements OnModuleInit {
     const order = await this.getOrder(user, { id: orderId }, manager);
 
     if (
-      ![ORDER_STATUS.PARIALLY_FILLED, ORDER_STATUS.PENDING].includes(
+      ![ORDER_STATUS.PARTIALLY_FILLED, ORDER_STATUS.PENDING].includes(
         order.status
       )
     ) {

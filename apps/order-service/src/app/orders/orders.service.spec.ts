@@ -151,7 +151,7 @@ describe('OrdersService', () => {
       const updatedOrder = transaction.order;
 
       expect(updatedOrder.executionPrice).toBe(defaultRate.rates['EUR']);
-      expect(updatedOrder.status).toBe(ORDER_STATUS.PARIALLY_FILLED);
+      expect(updatedOrder.status).toBe(ORDER_STATUS.PARTIALLY_FILLED);
       expect(transaction.status).toBe(OrderTransactionStatus.COMPLETED);
       expect(service['notificationClient'].emit).toHaveBeenCalled();
     });

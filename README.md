@@ -14,6 +14,14 @@ The Forex Marketplace is a monorepo project composed of multiple microservices:
 4. **Rate Service**: Fetches forex rates from an external API and exposes them via gRPC.
 5. **Notification Service**: Sends notifications to users after successful transactions.
 
+## Project setup
+
+To set up the project, first install pnpm (if not already installed):
+
+```bash
+$ npm install -g pnpm
+```
+
 ## Run tasks
 
 To run the dev server for your app, use:

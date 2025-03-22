@@ -28,9 +28,11 @@ export class CreateOrderDto {
   @ApiProperty({ description: 'Type of order', example: 'LIMIT' })
   @IsEnum(ORDER_TYPE)
   orderType: ORDER_TYPE;
+
   @ApiProperty({ description: 'BUY or SELL', example: 'BUY' })
   @IsEnum(TRADE_TYPE)
   tradeType: TRADE_TYPE;
+
   @ApiProperty({
     description: 'Amount of currency being traded',
     example: 1000,
@@ -39,6 +41,7 @@ export class CreateOrderDto {
   @IsNumber()
   @Min(0.01)
   amount: number;
+
   @ApiPropertyOptional({
     description: '(Optional) The price at which the user wants to trade',
     example: 1.15,

@@ -25,7 +25,7 @@ import {
   ListTranxDto,
   OrderTransactionResponse,
 } from '../transactions/dto/transaction-response.dto';
-import { ListOrderDto, OrderResponse } from './dto/order-response';
+import { ListOrderDto, OrderResponse } from './dto/order-response.dto';
 
 @Controller('orders')
 @ApiTags('Orders')
