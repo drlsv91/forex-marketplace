@@ -9,6 +9,7 @@ import {
   BadRequestException,
   Inject,
   Injectable,
+  Logger,
   NotFoundException,
   OnModuleInit,
   UnprocessableEntityException,
@@ -38,8 +39,10 @@ import { ListOrderDto } from './dto/order-response';
 
 @Injectable()
 export class OrdersService implements OnModuleInit {
+  private readonly logger = new Logger(OrdersService.name);
   private walletService: WalletServiceClient;
   private ratesService: RateServiceClient;
+  private retryCount = 3;
   constructor(
     @InjectRepository(OrderEntity)
     private readonly orderRepository: Repository<OrderEntity>,
@@ -91,15 +94,8 @@ export class OrdersService implements OnModuleInit {
       status: ORDER_STATUS.PENDING,
     });
     const order = await this.orderRepository.save(createOrder);
-    this.notificationClient.emit(NOTIFY_EMAIL_PATTERN, {
-      email: user.email,
-      subject: 'Order Placed Successfully',
-      body: `
-      Dear ${user.fullName},
-      Your order with Currency Pair (${currencyPair}), Amount: (${amount}), Price: (${price.toLocaleString()})
-      has been successfully placed and can be manually executed
-      `,
-    });
+    await this.sendCreateOrderNotification(user, order);
+
     return order;
   }
 
@@ -117,10 +113,7 @@ export class OrdersService implements OnModuleInit {
       );
       const [baseCurrency, quoteCurrency] = order.currencyPair.split('/');
 
-      const ratesResponse = await firstValueFrom(
-        this.ratesService.getRates({ baseCurrency })
-      );
-      const rates = ratesResponse.rates;
+      const rates = await this.fetchRates(baseCurrency);
 
       const executionPrice = rates[quoteCurrency];
 
@@ -151,7 +144,7 @@ export class OrdersService implements OnModuleInit {
         );
       }
 
-      order.executedAmount = executedAmount;
+      order.executedAmount = (order.executedAmount ?? 0) + executedAmount;
       order.executionPrice = executionPrice;
       if (order.tradeType === TRADE_TYPE.SELL) {
         // implement assest "lock"  as reserved
@@ -184,17 +177,7 @@ export class OrdersService implements OnModuleInit {
 
       await queryRunner.commitTransaction();
 
-      this.notificationClient.emit(NOTIFY_EMAIL_PATTERN, {
-        email: user.email,
-        subject: 'Order Executed Successfully',
-        body: `
-        Dear ${user.fullName},
-        Your order with Currency Pair (${
-          order.currencyPair
-        }), Amount: (${order.amount.toLocaleString()}), Price: (${order.pricePerUnit.toLocaleString()})
-        has been successfully executed
-        `,
-      });
+      await this.sendExecuteOrderNotification(user, order);
 
       return orderTrx;
     } catch (error) {
@@ -233,6 +216,27 @@ export class OrdersService implements OnModuleInit {
     });
 
     return new PageDto(items, count, dto);
+  }
+
+  private async fetchRates(currency: string) {
+    let ratesResponse = await firstValueFrom(
+      this.ratesService.getRates({ baseCurrency: currency })
+    );
+    const rates = ratesResponse.rates;
+
+    while (!rates && this.retryCount < 4) {
+      ratesResponse = await firstValueFrom(
+        this.ratesService.getRates({ baseCurrency: currency })
+      );
+      this.retryCount++;
+      this.logger.log(`RETRY FETCH RATES: retry... ${this.retryCount}`);
+    }
+
+    if (!ratesResponse) {
+      throw new UnprocessableEntityException(`Rates could be fetched`);
+    }
+
+    return rates;
   }
 
   private async validateWalletBalance(data: {
@@ -297,5 +301,32 @@ export class OrdersService implements OnModuleInit {
       );
     }
     return order;
+  }
+
+  private async sendExecuteOrderNotification(user: User, order: OrderEntity) {
+    this.notificationClient.emit(NOTIFY_EMAIL_PATTERN, {
+      email: user.email,
+      subject: 'Order Executed Successfully',
+      body: `
+      Dear ${user.fullName},
+      Your order with Currency Pair (${
+        order.currencyPair
+      }), Amount: (${order.amount.toLocaleString()}), Price: (${order.pricePerUnit.toLocaleString()})
+      has been successfully executed
+      `,
+    });
+  }
+  private async sendCreateOrderNotification(user: User, order: OrderEntity) {
+    this.notificationClient.emit(NOTIFY_EMAIL_PATTERN, {
+      email: user.email,
+      subject: 'Order Placed Successfully',
+      body: `
+      Dear ${user.fullName},
+      Your order with Currency Pair (${order.currencyPair}), Amount: (${
+        order.amount
+      }), Price: (${order.pricePerUnit.toLocaleString()})
+      has been successfully placed and can be manually executed
+      `,
+    });
   }
 }
