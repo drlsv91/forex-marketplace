@@ -6,6 +6,7 @@ import {
   Res,
   HttpStatus,
   UseInterceptors,
+  UseFilters,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -18,6 +19,7 @@ import {
   AuthenticateRequest,
   AuthServiceController,
   AuthServiceControllerMethods,
+  CustomRpcExceptionFilter,
   GrpcLoggingInterceptor,
   User,
 } from '@forex-marketplace/grpc';
@@ -41,7 +43,9 @@ export class AuthController implements AuthServiceController {
     const result = await this.authService.login(user, response);
     response.status(HttpStatus.OK).send(result);
   }
+
   @UseGuards(JwtAuthGuard)
+  @UseFilters(CustomRpcExceptionFilter)
   authenticate(
     request: AuthenticateRequest & { user: UserEntity }
   ): Promise<User> | Observable<User> | User {
