@@ -11,9 +11,9 @@ import { catchError, map, Observable, of, tap } from 'rxjs';
 import { AUTH_SERVICE_NAME, AuthServiceClient } from '@forex-marketplace/grpc';
 
 @Injectable()
-export class JwtAuardGuard implements CanActivate, OnModuleInit {
+export class JwtAuthGuard implements CanActivate, OnModuleInit {
   private authService: AuthServiceClient;
-  private readonly logger = new Logger(JwtAuardGuard.name);
+  private readonly logger = new Logger(JwtAuthGuard.name);
   constructor(@Inject(AUTH_SERVICE_NAME) private readonly client: ClientGrpc) {}
   onModuleInit() {
     this.authService =

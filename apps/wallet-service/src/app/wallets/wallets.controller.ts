@@ -7,12 +7,13 @@ import {
   Query,
   HttpStatus,
   UseInterceptors,
+  UseFilters,
 } from '@nestjs/common';
 import { WalletsService } from './wallets.service';
 import {
   ApiOkResponsePaginated,
   currentUser,
-  JwtAuardGuard,
+  JwtAuthGuard,
 } from '@forex-marketplace/common';
 import {
   CreateWalletRequest,
@@ -23,6 +24,7 @@ import {
   WalletServiceControllerMethods,
   User,
   GrpcLoggingInterceptor,
+  CustomRpcExceptionFilter,
 } from '@forex-marketplace/grpc';
 import { Observable } from 'rxjs';
 import { UpdateWalletBalanceDto } from './dto/update-wallet.dto';
@@ -43,7 +45,7 @@ export class WalletsController implements WalletServiceController {
   constructor(private readonly walletsService: WalletsService) {}
 
   @Post('/credit')
-  @UseGuards(JwtAuardGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     type: WalletResponse,
     status: HttpStatus.OK,
@@ -62,7 +64,7 @@ export class WalletsController implements WalletServiceController {
     status: HttpStatus.OK,
     description: 'debit user wallet based on a currency',
   })
-  @UseGuards(JwtAuardGuard)
+  @UseGuards(JwtAuthGuard)
   async debitWallet(
     @Body() creditWalletDto: UpdateWalletBalanceDto,
     @currentUser() user: User
@@ -74,14 +76,14 @@ export class WalletsController implements WalletServiceController {
   @ApiOkResponsePaginated(WalletTransactionResponse, {
     description: 'List wallet transactions',
   })
-  @UseGuards(JwtAuardGuard)
+  @UseGuards(JwtAuthGuard)
   async getTransactions(@Query() dto: ListTranxDto, @currentUser() user: User) {
     dto.user = user;
     return this.walletsService.getTransactions(dto);
   }
 
   @Get()
-  @UseGuards(JwtAuardGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     type: [WalletResponse],
     description: 'List the current user wallets',
@@ -93,6 +95,8 @@ export class WalletsController implements WalletServiceController {
     dto.userId = user.id;
     return this.walletsService.getUserWallets(dto);
   }
+
+  @UseFilters(CustomRpcExceptionFilter)
   trade(
     request: UpdateWalletRequest
   ):
@@ -101,6 +105,7 @@ export class WalletsController implements WalletServiceController {
     | CreateWalletResponse {
     return this.walletsService.tradeTranx(request);
   }
+  @UseFilters(CustomRpcExceptionFilter)
   getTradeWallet(
     request: FilterWalletRequest
   ):
@@ -109,7 +114,7 @@ export class WalletsController implements WalletServiceController {
     | CreateWalletResponse {
     return this.walletsService.getTradeWallet(request);
   }
-
+  @UseFilters(CustomRpcExceptionFilter)
   createWallet(
     request: CreateWalletRequest
   ):
