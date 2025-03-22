@@ -16,7 +16,7 @@ import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import {
   ApiOkResponsePaginated,
   currentUser,
-  JwtAuardGuard,
+  JwtAuthGuard,
 } from '@forex-marketplace/common';
 import { User } from '@forex-marketplace/grpc';
 import { TransactionsService } from '../transactions/transactions.service';
@@ -30,6 +30,7 @@ import { ListOrderDto, OrderResponse } from './dto/order-response';
 @Controller('orders')
 @ApiTags('Orders')
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 export class OrdersController {
   constructor(
     private readonly ordersService: OrdersService,
@@ -37,7 +38,6 @@ export class OrdersController {
   ) {}
 
   @Post('/')
-  @UseGuards(JwtAuardGuard)
   @ApiOkResponse({
     type: OrderResponse,
     description: 'place an order',
@@ -53,13 +53,11 @@ export class OrdersController {
   @ApiOkResponsePaginated(OrderResponse, {
     description: 'List orders paginated',
   })
-  @UseGuards(JwtAuardGuard)
   async listOrders(@Query() dto: ListOrderDto, @currentUser() user: User) {
     dto.user = user;
     return this.ordersService.listOrders(dto);
   }
   @Put('/:orderId/execute')
-  @UseGuards(JwtAuardGuard)
   @ApiOkResponse({
     type: OrderResponse,
     description: 'execute an order',
@@ -73,8 +71,8 @@ export class OrdersController {
     executeOrderDto.orderId = orderId;
     return this.ordersService.executeOrder(executeOrderDto);
   }
+
   @Get('/:orderId/transactions')
-  @UseGuards(JwtAuardGuard)
   @ApiOkResponsePaginated(OrderTransactionResponse, {
     description: 'List an order transactions paginated',
   })
@@ -87,8 +85,8 @@ export class OrdersController {
     dto.orderId = orderId;
     return this.transactionService.getByOrder(dto);
   }
+
   @Get('/transactions')
-  @UseGuards(JwtAuardGuard)
   @ApiOkResponsePaginated(OrderTransactionResponse, {
     description: 'List order transactions paginated',
   })
