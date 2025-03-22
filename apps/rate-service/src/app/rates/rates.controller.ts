@@ -1,6 +1,13 @@
-import { Controller, Get, Query, UseInterceptors } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Query,
+  UseFilters,
+  UseInterceptors,
+} from '@nestjs/common';
 import { RatesService } from './rates.service';
 import {
+  CustomRpcExceptionFilter,
   GrpcLoggingInterceptor,
   RateServiceController,
   RateServiceControllerMethods,
@@ -17,6 +24,8 @@ import { RateQueryDto } from './query.dto';
 @UseInterceptors(GrpcLoggingInterceptor)
 export class RatesController implements RateServiceController {
   constructor(private readonly ratesService: RatesService) {}
+
+  @UseFilters(CustomRpcExceptionFilter)
   getRates(
     request: RatesRequest
   ): Promise<RatesResponse> | Observable<RatesResponse> | RatesResponse {
