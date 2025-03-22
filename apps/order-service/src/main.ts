@@ -10,7 +10,7 @@ import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  initApp(app, {
+  await initApp(app, {
     docs: {
       title: 'Order Service',
       description: 'API for Forex order management',
