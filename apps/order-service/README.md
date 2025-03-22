@@ -22,7 +22,7 @@ The Order Service handles the creation and management of forex transactions and 
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/drlsv91/forex-marketplace.git
+   git clone https://ooluwaleye93@bitbucket.org/drlsv91/forex-marketplace.git
    ```
 2. Navigate to the order-service directory:
    ```bash

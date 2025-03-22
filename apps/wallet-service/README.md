@@ -20,7 +20,7 @@ The Wallet Service manages user wallets, balances, and transactions.
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/drlsv91/forex-marketplace.git
+   git clone https://ooluwaleye93@bitbucket.org/drlsv91/forex-marketplace.git
    ```
 2. Navigate to the wallet-service directory:
    ```bash
