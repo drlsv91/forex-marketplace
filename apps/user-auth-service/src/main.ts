@@ -10,10 +10,17 @@ import { AppModule } from './app/app.module';
 import { initApp } from '@forex-marketplace/nestjs';
 import { AUTH_PACKAGE_NAME } from '@forex-marketplace/grpc';
 import { join } from 'path';
-import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
+
+  await initApp(app, {
+    docs: {
+      title: 'User Auth Service',
+      description: 'API for user authentication and registration',
+      tagName: 'Auth Service',
+    },
+  });
 
   app.connectMicroservice<GrpcOptions>({
     transport: Transport.GRPC,
@@ -24,15 +31,7 @@ async function bootstrap() {
     },
   });
 
-  await initApp(app, {
-    docs: {
-      title: 'User Auth Service',
-      description: 'API for user authentication and registration',
-      tagName: 'Auth Service',
-    },
-  });
-
   app.startAllMicroservices();
 }
 
-bootstrap().catch((err) => Logger.error(err));
+bootstrap();
