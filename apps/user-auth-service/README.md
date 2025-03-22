@@ -62,7 +62,7 @@ DATABASE_URL=postgres://postgres:forex_password@postgres:5432/forex_marketplace?
 ## For Local Development:
 
 ```bash
-DATABASE_URL=postgres://postgres:forex_password@postgres:5432/forex_marketplace?schema=public
+DATABASE_URL=postgres://postgres:forex_password@localhost:5432/forex_marketplace?schema=public
   JWT_SECRET=<jwt_secret>
   JWT_EXPIRATION_MS=36000
   PORT=3000

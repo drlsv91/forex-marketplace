@@ -50,7 +50,7 @@ DATABASE_URL=postgres://postgres:forex_password@postgres:5432/forex_marketplace?
 ## For Local Development:
 
 ```bash
-DATABASE_URL=postgres://postgres:forex_password@postgres:5432/forex_marketplace?schema=public
+DATABASE_URL=postgres://postgres:forex_password@localhost:5432/forex_marketplace?schema=public
   PORT=3001
   RABBITMQ_URI=amqp://localhost:5672
   REDIS_HOST=localhost
