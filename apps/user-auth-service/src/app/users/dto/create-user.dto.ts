@@ -13,7 +13,6 @@ export class CreateUserDto {
     example: 'john.doe@google.com',
   })
   @IsEmail()
-  @IsNotEmpty()
   @Transform(({ value }) => value.toLowerCase().replace(/\s/g, ''))
   email: string;
 

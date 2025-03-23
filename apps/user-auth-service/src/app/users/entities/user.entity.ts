@@ -12,6 +12,9 @@ export class UserEntity extends AbstractEntity<UserResponse> {
   @Column({ length: 200 })
   fullName: string;
 
+  @Column({ default: false })
+  emailVerified: boolean;
+
   @Column({ type: 'timestamp', nullable: true })
   lastLoginTimestamp: Date;
 

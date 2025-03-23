@@ -84,6 +84,7 @@ export class UsersService implements OnModuleInit {
       throw new UnauthorizedException(errorMessage);
     }
 
+    // check if email is verfied
     return user;
   }
 
