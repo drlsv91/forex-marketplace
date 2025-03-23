@@ -16,6 +16,8 @@ export class AuthService {
   async login(user: UserEntity, response: Response) {
     const tokenPayload: TokenPayload = {
       userId: user.id,
+      email: user.email,
+      fullName: user.fullName,
     };
 
     const expires = new Date();
@@ -31,8 +33,7 @@ export class AuthService {
       { lastLoginTimestamp: new Date() }
     );
     return {
-      access_token: token,
-      user: { email: user.email, full_name: user.fullName },
+      accessToken: token,
     };
   }
 }
