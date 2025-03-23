@@ -9,6 +9,7 @@ export class UserEntity extends AbstractEntity<UserResponse> {
 
   @Column({ length: 200 })
   password: string;
+
   @Column({ length: 200 })
   fullName: string;
 
